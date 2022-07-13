@@ -11,15 +11,25 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
   cupertino_icons: ^1.0.2
+  http: ^0.13.4
+  get: ^4.6.5
+  provider: ^6.0.3
+  equatable: ^2.0.3
+  flutter_secure_storage: ^5.0.2
+  localstorage: ^4.0.0+1
+  carousel_slider: ^4.1.1
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   flutter_lints: ^1.0.0
+  test: ^1.17.12
+  flutter_launcher_icons: ^0.9.3
+  mockito: ^3.0.0
+  faker: ^2.0.0
+  image_test_utils: ^1.0.0
 
 flutter:
-
   uses-material-design: true
