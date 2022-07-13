@@ -1,3 +1,4 @@
+import 'package:clean_architecture/domain/usecases/authentication.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -12,6 +13,7 @@ void main() {
 
   setUp(() {
     http = MockHttpClient();
+
     url = faker.internet.httpUrl();
 
     // sut: "System under test" (classe sendo testada)
@@ -19,9 +21,18 @@ void main() {
   });
 
   test('Deve chamar o HttpClient com a URL correta', () async {
-    await sut.auth();
+    final params = AuthenticationParams(
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    );
 
-    verify(http.request(url: url, method: 'post'));
+    await sut.auth(params);
+
+    verify(http.request(
+      url: url,
+      method: 'post',
+      body: {'email': params.email, 'password': params.password},
+    ));
   });
 }
 
@@ -29,6 +40,7 @@ abstract class IHttpClient {
   Future<void> request({
     required String url,
     required String method,
+    required Map<String, String> body,
   });
 }
 
@@ -41,7 +53,11 @@ class RemoteAuthentication {
     required this.url,
   });
 
-  Future<void> auth() async {
-    await http.request(url: url, method: 'post');
+  Future<void> auth(AuthenticationParams params) async {
+    await http.request(
+      url: url,
+      method: 'post',
+      body: params.toJson(),
+    );
   }
 }
