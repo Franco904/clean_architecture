@@ -1,5 +1,5 @@
 import 'package:clean_architecture/data/usecases/remote_authentication.dart';
-import 'package:clean_architecture/domain/usecases/authentication.dart';
+import 'package:clean_architecture/domain/usecases/usecases.dart';
 import '../../../mock/http_client_mock.dart';
 
 import 'package:faker/faker.dart';
