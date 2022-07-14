@@ -1,5 +1,5 @@
-import 'package:mockito/mockito.dart';
+import 'package:clean_architecture/data/interfaces/interfaces.dart';
 
-import '../unit/data/usecases/remote_authentication_test.dart';
+import 'package:mockito/mockito.dart';
 
 class MockHttpClient extends Mock implements IHttpClient {}

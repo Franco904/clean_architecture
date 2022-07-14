@@ -1,23 +1,28 @@
+import 'package:clean_architecture/data/usecases/remote_authentication.dart';
 import 'package:clean_architecture/domain/usecases/authentication.dart';
+import '../../../mock/http_client_mock.dart';
+
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:mockito/mockito.dart';
-
-import '../../../mock/http_client_mock.dart';
 
 void main() {
   late RemoteAuthentication sut;
-  late MockHttpClient http;
+  late MockHttpClient mockHttpClient;
   late String url;
 
   setUp(() {
-    http = MockHttpClient();
+    mockHttpClient = MockHttpClient();
 
     url = faker.internet.httpUrl();
 
     // sut: "System under test" (classe sendo testada)
-    sut = RemoteAuthentication(http: http, url: url);
+    sut = RemoteAuthentication(httpClient: mockHttpClient, url: url);
+  });
+
+  tearDown(() {
+    reset(mockHttpClient);
+    resetMockitoState();
   });
 
   test('Deve chamar o HttpClient com a URL correta', () async {
@@ -28,36 +33,10 @@ void main() {
 
     await sut.auth(params);
 
-    verify(http.request(
+    verify(mockHttpClient.request(
       url: url,
       method: 'post',
       body: {'email': params.email, 'password': params.password},
     ));
   });
-}
-
-abstract class IHttpClient {
-  Future<void> request({
-    required String url,
-    required String method,
-    required Map<String, String> body,
-  });
-}
-
-class RemoteAuthentication {
-  final IHttpClient http;
-  final String url;
-
-  RemoteAuthentication({
-    required this.http,
-    required this.url,
-  });
-
-  Future<void> auth(AuthenticationParams params) async {
-    await http.request(
-      url: url,
-      method: 'post',
-      body: params.toJson(),
-    );
-  }
 }
