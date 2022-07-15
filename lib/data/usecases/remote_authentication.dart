@@ -19,8 +19,8 @@ class RemoteAuthentication {
         method: 'post',
         body: RemoteAuthenticationParams.fromDomain(params).toJson(),
       );
-    } on HttpError {
-      throw DomainErrors.unexpected;
+    } on HttpError catch (error) {
+      throw error == HttpError.unauthorized ? DomainErrors.invalidCredentials : DomainErrors.unexpected;
     }
   }
 }

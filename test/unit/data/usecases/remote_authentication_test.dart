@@ -72,5 +72,15 @@ void main() {
 
       expect(res, throwsA(DomainErrors.unexpected));
     });
+
+    test('Deve retornar InvalidCredentialsError se o HttpClient responder 401', () async {
+      when(mockHttpClient.request(url: anyNamed('url'), method: anyNamed('method'), body: anyNamed('body'))).thenThrow(
+        HttpError.unauthorized,
+      );
+
+      final res = sut.auth(params);
+
+      expect(res, throwsA(DomainErrors.invalidCredentials));
+    });
   });
 }
