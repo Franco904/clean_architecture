@@ -50,5 +50,13 @@ void main() {
 
       expect(res, throwsA(DomainErrors.unexpected));
     });
+
+    test('Deve retornar UnexpectedError se o HttpClient responder 404', () async {
+      when(mockHttpClient.request(url: anyNamed('url'), method: anyNamed('method'), body: anyNamed('body'))).thenThrow(HttpError.notFound);
+
+      final res = sut.auth(params);
+
+      expect(res, throwsA(DomainErrors.unexpected));
+    });
   });
 }
