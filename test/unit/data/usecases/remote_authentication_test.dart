@@ -11,6 +11,7 @@ import 'package:mockito/mockito.dart';
 void main() {
   group('RemoteAuthentication | ', () {
     late RemoteAuthentication sut;
+    late AuthenticationParams params;
     late MockHttpClient mockHttpClient;
     late String url;
 
@@ -20,6 +21,11 @@ void main() {
 
       // sut: "System under test" (classe sendo testada)
       sut = RemoteAuthentication(httpClient: mockHttpClient, url: url);
+
+      params = AuthenticationParams(
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+      );
     });
 
     tearDown(() {
@@ -28,11 +34,6 @@ void main() {
     });
 
     test('Deve chamar o HttpClient com a URL correta', () async {
-      final params = AuthenticationParams(
-        email: faker.internet.email(),
-        password: faker.internet.password(),
-      );
-
       await sut.auth(params);
 
       verify(mockHttpClient.request(
@@ -44,11 +45,6 @@ void main() {
 
     test('Deve retornar UnexpectedError se o HttpClient responder 400', () async {
       when(mockHttpClient.request(url: anyNamed('url'), method: anyNamed('method'), body: anyNamed('body'))).thenThrow(HttpError.badRequest);
-
-      final params = AuthenticationParams(
-        email: faker.internet.email(),
-        password: faker.internet.password(),
-      );
 
       final res = sut.auth(params);
 
