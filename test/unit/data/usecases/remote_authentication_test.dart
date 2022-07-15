@@ -44,7 +44,9 @@ void main() {
     });
 
     test('Deve retornar UnexpectedError se o HttpClient responder 400', () async {
-      when(mockHttpClient.request(url: anyNamed('url'), method: anyNamed('method'), body: anyNamed('body'))).thenThrow(HttpError.badRequest);
+      when(mockHttpClient.request(url: anyNamed('url'), method: anyNamed('method'), body: anyNamed('body'))).thenThrow(
+        HttpError.badRequest,
+      );
 
       final res = sut.auth(params);
 
@@ -52,7 +54,19 @@ void main() {
     });
 
     test('Deve retornar UnexpectedError se o HttpClient responder 404', () async {
-      when(mockHttpClient.request(url: anyNamed('url'), method: anyNamed('method'), body: anyNamed('body'))).thenThrow(HttpError.notFound);
+      when(mockHttpClient.request(url: anyNamed('url'), method: anyNamed('method'), body: anyNamed('body'))).thenThrow(
+        HttpError.notFound,
+      );
+
+      final res = sut.auth(params);
+
+      expect(res, throwsA(DomainErrors.unexpected));
+    });
+
+    test('Deve retornar UnexpectedError se o HttpClient responder 500', () async {
+      when(mockHttpClient.request(url: anyNamed('url'), method: anyNamed('method'), body: anyNamed('body'))).thenThrow(
+        HttpError.serverError,
+      );
 
       final res = sut.auth(params);
 
