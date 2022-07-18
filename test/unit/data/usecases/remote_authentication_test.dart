@@ -1,5 +1,6 @@
 import 'package:clean_architecture/data/usecases/remote_authentication.dart';
 import 'package:clean_architecture/data/utils/utils.dart';
+
 import 'package:clean_architecture/domain/usecases/usecases.dart';
 import 'package:clean_architecture/domain/utils/utils.dart';
 import '../../../mock/http_client_mock.dart';
@@ -81,6 +82,19 @@ void main() {
       final res = sut.auth(params);
 
       expect(res, throwsA(DomainErrors.invalidCredentials));
+    });
+
+    test('Deve retornar um objeto Account se o HttpClient responder 200', () async {
+      final accessToken = faker.guid.guid();
+      final name = faker.person.name();
+
+      when(mockHttpClient.request(url: anyNamed('url'), method: anyNamed('method'), body: anyNamed('body'))).thenAnswer(
+        (_) async => {'accessToken': accessToken, 'name': name},
+      );
+
+      final account = await sut.auth(params);
+
+      expect(account.token, accessToken);
     });
   });
 }
