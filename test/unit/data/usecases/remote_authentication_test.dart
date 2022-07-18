@@ -35,6 +35,8 @@ void main() {
     });
 
     test('Deve chamar o HttpClient com a URL correta', () async {
+      when(mockHttpClient.request(url: anyNamed('url'), method: anyNamed('method'), body: anyNamed('body'))).thenAnswer((_) async => {'accessToken': faker.guid.guid(), 'name': faker.person.name()});
+
       await sut.auth(params);
 
       verify(mockHttpClient.request(
@@ -95,6 +97,16 @@ void main() {
       final account = await sut.auth(params);
 
       expect(account.token, accessToken);
+    });
+
+    test('Deve retornar UnexpectedError se o HttpClient responder 200 com dados inválidos', () async {
+      when(mockHttpClient.request(url: anyNamed('url'), method: anyNamed('method'), body: anyNamed('body'))).thenAnswer(
+        (_) async => {'invalid_key': 'invalid_value'},
+      );
+
+      final account = sut.auth(params);
+
+      expect(account, throwsA(DomainErrors.unexpected));
     });
   });
 }
