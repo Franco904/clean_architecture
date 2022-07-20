@@ -26,7 +26,7 @@ void main() {
     test('Deve chamar requisição POST com valores corretos', () {
       sut.request(url: url, method: 'post');
 
-      verify(mockClient.post(Uri.parse(url)));
+      verify(mockClient.post(Uri.parse(url), headers: {'Content-Type': 'application/json'}));
     });
   });
 }
@@ -41,6 +41,8 @@ class HttpAdapter {
     required String? method,
     Map<String, String>? body,
   }) async {
-    client.post(Uri.parse(url!));
+    final headers = {'Content-Type': 'application/json'};
+
+    client.post(Uri.parse(url!), headers: headers);
   }
 }
