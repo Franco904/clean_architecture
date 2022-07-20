@@ -3,7 +3,7 @@ import 'package:clean_architecture/data/utils/utils.dart';
 
 import 'package:clean_architecture/domain/usecases/usecases.dart';
 import 'package:clean_architecture/domain/utils/utils.dart';
-import '../../../mock/http_client_mock.dart';
+import '../../../mock/http/http_client_mock.dart';
 
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';

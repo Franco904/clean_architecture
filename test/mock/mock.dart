@@ -1,1 +1,1 @@
-export 'http_client_mock.dart';
+export 'http/http_client_mock.dart';
