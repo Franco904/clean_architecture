@@ -1,12 +1,10 @@
-import 'dart:convert';
-
-import 'package:clean_architecture/data/interfaces/ihttp_client.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../mock/http/client_mock.dart';
+import 'package:clean_architecture/infra/http/http.dart';
 
 void main() {
   group('POST | ', () {
@@ -88,29 +86,4 @@ void main() {
       expect(res, null);
     });
   });
-}
-
-class HttpAdapter implements IHttpClient {
-  Client client;
-
-  HttpAdapter(this.client);
-
-  @override
-  Future<Map<String, dynamic>?> request({
-    required String? url,
-    required String? method,
-    Map<String, String>? body,
-  }) async {
-    final headers = {
-      'Content-Type': 'application/json',
-      'accept': 'application/json',
-    };
-    final jsonBody = body != null ? jsonEncode(body) : null;
-
-    final res = await client.post(Uri.parse(url!), headers: headers, body: jsonBody);
-
-    if (res.statusCode == 204) return null;
-
-    return res.body.isEmpty ? null : jsonDecode(res.body) as Map<String, dynamic>;
-  }
 }
