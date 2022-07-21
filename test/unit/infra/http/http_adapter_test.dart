@@ -102,5 +102,13 @@ void main() {
 
       expect(res, throwsA(HttpError.badRequest));
     });
+
+    test('Deve retornar ServerError caso status da requisição seja 500', () async {
+      mockHttpResponse(500);
+
+      final res = sut.request(url: url, method: 'post');
+
+      expect(res, throwsA(HttpError.serverError));
+    });
   });
 }

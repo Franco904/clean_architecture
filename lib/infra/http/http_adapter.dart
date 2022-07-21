@@ -30,6 +30,8 @@ class HttpAdapter implements IHttpClient {
     if (res.statusCode == 204) return null;
     if (res.statusCode == 200) return res.body.isEmpty ? null : jsonDecode(res.body) as Map<String, dynamic>;
 
-    throw HttpError.badRequest;
+    if (res.statusCode == 400) throw HttpError.badRequest;
+
+    throw HttpError.serverError;
   }
 }
