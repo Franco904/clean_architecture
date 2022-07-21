@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:clean_architecture/data/interfaces/ihttp_client.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
@@ -26,17 +27,22 @@ void main() {
     });
 
     test('Deve chamar requisição POST com valores corretos', () {
+      when(mockClient.post(Uri.parse(url), headers: anyNamed('headers'), body: anyNamed('body')))
+          .thenAnswer((_) async => Response('{"any_key":"any_value"}', 200));
+
       // ignore: prefer_single_quotes
       sut.request(url: url, method: 'post', body: {'any_key': 'any_value'});
 
       verify(mockClient.post(
         Uri.parse(url),
         headers: anyNamed('headers'),
-        body: '{"any_key":"any_value"}'
+        body: '{"any_key":"any_value"}',
       ));
     });
 
     test('Deve chamar requisição POST sem valor para o atributo body', () {
+      when(mockClient.post(Uri.parse(url), headers: anyNamed('headers'))).thenAnswer((_) async => Response('{"any_key":"any_value"}', 200));
+
       sut.request(url: url, method: 'post');
 
       verify(mockClient.post(
@@ -44,15 +50,24 @@ void main() {
         headers: anyNamed('headers'),
       ));
     });
+
+    test('Deve retornar dados caso status seja 200', () async {
+      when(mockClient.post(Uri.parse(url), headers: anyNamed('headers'))).thenAnswer((_) async => Response('{"any_key":"any_value"}', 200));
+
+      final res = await sut.request(url: url, method: 'post');
+
+      expect(res, {'any_key': 'any_value'});
+    });
   });
 }
 
-class HttpAdapter {
+class HttpAdapter implements IHttpClient {
   Client client;
 
   HttpAdapter(this.client);
 
-  Future<void> request({
+  @override
+  Future<Map<String, dynamic>> request({
     required String? url,
     required String? method,
     Map<String, String>? body,
@@ -63,6 +78,7 @@ class HttpAdapter {
     };
     final jsonBody = body != null ? jsonEncode(body) : null;
 
-    client.post(Uri.parse(url!), headers: headers, body: jsonBody);
+    final res = await client.post(Uri.parse(url!), headers: headers, body: jsonBody);
+    return jsonDecode(res.body) as Map<String, dynamic>;
   }
 }
