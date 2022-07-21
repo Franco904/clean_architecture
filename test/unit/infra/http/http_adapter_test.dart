@@ -103,6 +103,14 @@ void main() {
       expect(res, throwsA(HttpError.badRequest));
     });
 
+    test('Deve retornar UnauthorizedError caso status da requisição seja 401', () async {
+      mockHttpResponse(401);
+
+      final res = sut.request(url: url, method: 'post');
+
+      expect(res, throwsA(HttpError.unauthorized));
+    });
+
     test('Deve retornar ServerError caso status da requisição seja 500', () async {
       mockHttpResponse(500);
 
