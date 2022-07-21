@@ -18,8 +18,8 @@ void main() {
       return when(mockClient.post(Uri.parse(url), headers: anyNamed('headers'), body: hasBody ? anyNamed('body') : null));
     }
 
-    void mockHttpResponse(statusCode, {String response = '{"any_key":"any_value"}', bool hasRequestBody = false}) {
-      mockExpectation(hasBody: hasRequestBody).thenAnswer((_) async => Response(response, statusCode));
+    void mockHttpResponse(statusCode, {String responseBody = '{"any_key":"any_value"}', bool hasRequestBody = false}) {
+      mockExpectation(hasBody: hasRequestBody).thenAnswer((_) async => Response(responseBody, statusCode));
     }
 
     setUp(() {
@@ -28,7 +28,7 @@ void main() {
 
       sut = HttpAdapter(mockClient);
 
-      // Padrão de mock/stub antes de cada teste
+      // Padrão de mock/stub antes de cada teste de sucesso
       mockHttpResponse(200);
     });
 
@@ -65,7 +65,15 @@ void main() {
     });
 
     test('Deve retornar nulo caso status da requisição seja 200 e retorne nenhum dado', () async {
-      mockHttpResponse(200, response: '');
+      mockHttpResponse(200, responseBody: '');
+
+      final res = await sut.request(url: url, method: 'post');
+
+      expect(res, null);
+    });
+
+    test('Deve retornar nulo caso status da requisição seja 204', () async {
+      mockHttpResponse(204, responseBody: '');
 
       final res = await sut.request(url: url, method: 'post');
 
