@@ -21,6 +21,8 @@ void main() {
     void mockHttpData(Map<String, dynamic> data) => mockExpectation().thenAnswer((_) async => data);
 
     void mockHttpError(HttpError httpError) => mockExpectation().thenThrow(httpError);
+  
+    void mockHttpNullReturn() => mockExpectation().thenAnswer((_) => null);
 
     // Padrão para respostas http com sucesso
     Map<String, dynamic> validMockData() => {'accessToken': faker.guid.guid(), 'name': faker.person.name()};
@@ -91,7 +93,7 @@ void main() {
       final validData = validMockData();
       mockHttpData(validData);
 
-      final account = await sut.auth(params);
+      final account = (await sut.auth(params))!;
 
       expect(account.token, validData['accessToken']);
     });
@@ -102,6 +104,14 @@ void main() {
       final account = sut.auth(params);
 
       expect(account, throwsA(DomainErrors.unexpected));
+    });
+
+    test('Deve retornar nulo se o HttpClient responder 200 sem dados retornados', () async {
+      mockHttpNullReturn();
+
+      final account = await sut.auth(params);
+
+      expect(account, null);
     });
   });
 }
