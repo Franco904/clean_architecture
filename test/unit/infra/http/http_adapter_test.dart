@@ -72,8 +72,16 @@ void main() {
       expect(res, null);
     });
 
-    test('Deve retornar nulo caso status da requisição seja 204', () async {
+    test('Deve retornar nulo caso status da requisição seja 204 e retorne nenhum dado', () async {
       mockHttpResponse(204, responseBody: '');
+
+      final res = await sut.request(url: url, method: 'post');
+
+      expect(res, null);
+    });
+
+    test('Deve retornar nulo caso status da requisição seja 204 e retorne algum dado', () async {
+      mockHttpResponse(204);
 
       final res = await sut.request(url: url, method: 'post');
 
@@ -100,6 +108,8 @@ class HttpAdapter implements IHttpClient {
     final jsonBody = body != null ? jsonEncode(body) : null;
 
     final res = await client.post(Uri.parse(url!), headers: headers, body: jsonBody);
+
+    if (res.statusCode == 204) return null;
 
     return res.body.isEmpty ? null : jsonDecode(res.body) as Map<String, dynamic>;
   }
