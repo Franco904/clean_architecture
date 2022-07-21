@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
@@ -24,9 +26,23 @@ void main() {
     });
 
     test('Deve chamar requisição POST com valores corretos', () {
+      // ignore: prefer_single_quotes
+      sut.request(url: url, method: 'post', body: {'any_key': 'any_value'});
+
+      verify(mockClient.post(
+        Uri.parse(url),
+        headers: anyNamed('headers'),
+        body: '{"any_key":"any_value"}'
+      ));
+    });
+
+    test('Deve chamar requisição POST sem valor para o atributo body', () {
       sut.request(url: url, method: 'post');
 
-      verify(mockClient.post(Uri.parse(url), headers: {'Content-Type': 'application/json'}));
+      verify(mockClient.post(
+        Uri.parse(url),
+        headers: anyNamed('headers'),
+      ));
     });
   });
 }
@@ -41,8 +57,12 @@ class HttpAdapter {
     required String? method,
     Map<String, String>? body,
   }) async {
-    final headers = {'Content-Type': 'application/json'};
+    final headers = {
+      'Content-Type': 'application/json',
+      'accept': 'application/json',
+    };
+    final jsonBody = body != null ? jsonEncode(body) : null;
 
-    client.post(Uri.parse(url!), headers: headers);
+    client.post(Uri.parse(url!), headers: headers, body: jsonBody);
   }
 }
