@@ -14,11 +14,22 @@ void main() {
     late MockClient mockClient;
     late String url;
 
+    PostExpectation mockExpectation({bool hasBody = false}) {
+      return when(mockClient.post(Uri.parse(url), headers: anyNamed('headers'), body: hasBody ? anyNamed('body') : null));
+    }
+
+    void mockHttpResponse(statusCode, {String response = '{"any_key":"any_value"}', bool hasRequestBody = false}) {
+      mockExpectation(hasBody: hasRequestBody).thenAnswer((_) async => Response(response, statusCode));
+    }
+
     setUp(() {
       mockClient = MockClient();
       url = faker.internet.httpUrl();
 
       sut = HttpAdapter(mockClient);
+
+      // Padrão de mock/stub antes de cada teste
+      mockHttpResponse(200);
     });
 
     tearDown(() {
@@ -27,10 +38,8 @@ void main() {
     });
 
     test('Deve chamar requisição POST com valores corretos', () {
-      when(mockClient.post(Uri.parse(url), headers: anyNamed('headers'), body: anyNamed('body')))
-          .thenAnswer((_) async => Response('{"any_key":"any_value"}', 200));
+      mockHttpResponse(200, hasRequestBody: true);
 
-      // ignore: prefer_single_quotes
       sut.request(url: url, method: 'post', body: {'any_key': 'any_value'});
 
       verify(mockClient.post(
@@ -41,8 +50,6 @@ void main() {
     });
 
     test('Deve chamar requisição POST sem valor para o atributo body', () {
-      when(mockClient.post(Uri.parse(url), headers: anyNamed('headers'))).thenAnswer((_) async => Response('{"any_key":"any_value"}', 200));
-
       sut.request(url: url, method: 'post');
 
       verify(mockClient.post(
@@ -52,15 +59,13 @@ void main() {
     });
 
     test('Deve retornar dados caso status da requisição seja 200', () async {
-      when(mockClient.post(Uri.parse(url), headers: anyNamed('headers'))).thenAnswer((_) async => Response('{"any_key":"any_value"}', 200));
-
       final res = await sut.request(url: url, method: 'post');
 
       expect(res, {'any_key': 'any_value'});
     });
 
     test('Deve retornar nulo caso status da requisição seja 200 e retorne nenhum dado', () async {
-      when(mockClient.post(Uri.parse(url), headers: anyNamed('headers'))).thenAnswer((_) async => Response('', 200));
+      mockHttpResponse(200, response: '');
 
       final res = await sut.request(url: url, method: 'post');
 
