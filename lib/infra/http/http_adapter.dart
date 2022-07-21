@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 
 import 'package:clean_architecture/data/interfaces/interfaces.dart';
+import 'package:clean_architecture/data/utils/utils.dart';
 
 class HttpAdapter implements IHttpClient {
   Client client;
@@ -22,12 +23,13 @@ class HttpAdapter implements IHttpClient {
 
     final res = await client.post(Uri.parse(url!), headers: headers, body: jsonBody);
 
-    return checkResponseAndReturn(res);
+    return _checkResponseAndReturn(res);
   }
 
-  Map<String, dynamic>? checkResponseAndReturn(Response res) {
+  Map<String, dynamic>? _checkResponseAndReturn(Response res) {
     if (res.statusCode == 204) return null;
+    if (res.statusCode == 200) return res.body.isEmpty ? null : jsonDecode(res.body) as Map<String, dynamic>;
 
-    return res.body.isEmpty ? null : jsonDecode(res.body) as Map<String, dynamic>;
+    throw HttpError.badRequest;
   }
 }

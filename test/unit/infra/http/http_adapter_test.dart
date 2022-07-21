@@ -4,6 +4,7 @@ import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../mock/http/client_mock.dart';
+import 'package:clean_architecture/data/utils/utils.dart';
 import 'package:clean_architecture/infra/http/http.dart';
 
 void main() {
@@ -84,6 +85,22 @@ void main() {
       final res = await sut.request(url: url, method: 'post');
 
       expect(res, null);
+    });
+
+    test('Deve retornar BadRequestError caso status da requisição seja 400 com response body vazio', () async {
+      mockHttpResponse(400, responseBody: '');
+
+      final res = sut.request(url: url, method: 'post');
+
+      expect(res, throwsA(HttpError.badRequest));
+    });
+
+    test('Deve retornar BadRequestError caso status da requisição seja 400', () async {
+      mockHttpResponse(400);
+
+      final res = sut.request(url: url, method: 'post');
+
+      expect(res, throwsA(HttpError.badRequest));
     });
   });
 }
