@@ -51,12 +51,20 @@ void main() {
       ));
     });
 
-    test('Deve retornar dados caso status seja 200', () async {
+    test('Deve retornar dados caso status da requisição seja 200', () async {
       when(mockClient.post(Uri.parse(url), headers: anyNamed('headers'))).thenAnswer((_) async => Response('{"any_key":"any_value"}', 200));
 
       final res = await sut.request(url: url, method: 'post');
 
       expect(res, {'any_key': 'any_value'});
+    });
+
+    test('Deve retornar nulo caso status da requisição seja 200 e retorne nenhum dado', () async {
+      when(mockClient.post(Uri.parse(url), headers: anyNamed('headers'))).thenAnswer((_) async => Response('', 200));
+
+      final res = await sut.request(url: url, method: 'post');
+
+      expect(res, null);
     });
   });
 }
@@ -67,7 +75,7 @@ class HttpAdapter implements IHttpClient {
   HttpAdapter(this.client);
 
   @override
-  Future<Map<String, dynamic>> request({
+  Future<Map<String, dynamic>?> request({
     required String? url,
     required String? method,
     Map<String, String>? body,
@@ -79,6 +87,7 @@ class HttpAdapter implements IHttpClient {
     final jsonBody = body != null ? jsonEncode(body) : null;
 
     final res = await client.post(Uri.parse(url!), headers: headers, body: jsonBody);
-    return jsonDecode(res.body) as Map<String, dynamic>;
+
+    return res.body.isEmpty ? null : jsonDecode(res.body) as Map<String, dynamic>;
   }
 }
