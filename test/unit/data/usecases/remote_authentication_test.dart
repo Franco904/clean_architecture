@@ -21,7 +21,7 @@ void main() {
     void mockHttpData(Map<String, dynamic> data) => mockExpectation().thenAnswer((_) async => data);
 
     void mockHttpError(HttpError httpError) => mockExpectation().thenThrow(httpError);
-  
+
     void mockHttpNullReturn() => mockExpectation().thenAnswer((_) => null);
 
     // Padrão para respostas http com sucesso
