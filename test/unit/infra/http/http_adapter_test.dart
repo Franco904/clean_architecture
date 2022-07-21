@@ -57,13 +57,13 @@ void main() {
       ));
     });
 
-    test('Deve retornar dados caso status da requisição seja 200', () async {
+    test('Deve retornar dados caso o status da requisição seja 200', () async {
       final res = await sut.request(url: url, method: 'post');
 
       expect(res, {'any_key': 'any_value'});
     });
 
-    test('Deve retornar nulo caso status da requisição seja 200 e retorne nenhum dado', () async {
+    test('Deve retornar nulo caso o status da requisição seja 200 e retorne nenhum dado', () async {
       mockHttpResponse(200, responseBody: '');
 
       final res = await sut.request(url: url, method: 'post');
@@ -71,7 +71,7 @@ void main() {
       expect(res, null);
     });
 
-    test('Deve retornar nulo caso status da requisição seja 204 e retorne nenhum dado', () async {
+    test('Deve retornar nulo caso o status da requisição seja 204 e retorne nenhum dado', () async {
       mockHttpResponse(204, responseBody: '');
 
       final res = await sut.request(url: url, method: 'post');
@@ -79,7 +79,7 @@ void main() {
       expect(res, null);
     });
 
-    test('Deve retornar nulo caso status da requisição seja 204 e retorne algum dado', () async {
+    test('Deve retornar nulo caso o status da requisição seja 204 e retorne algum dado', () async {
       mockHttpResponse(204);
 
       final res = await sut.request(url: url, method: 'post');
@@ -87,7 +87,7 @@ void main() {
       expect(res, null);
     });
 
-    test('Deve retornar BadRequestError caso status da requisição seja 400 com response body vazio', () async {
+    test('Deve retornar BadRequestError caso o status da requisição seja 400 com response body vazio', () async {
       mockHttpResponse(400, responseBody: '');
 
       final res = sut.request(url: url, method: 'post');
@@ -95,7 +95,7 @@ void main() {
       expect(res, throwsA(HttpError.badRequest));
     });
 
-    test('Deve retornar BadRequestError caso status da requisição seja 400', () async {
+    test('Deve retornar BadRequestError caso o status da requisição seja 400', () async {
       mockHttpResponse(400);
 
       final res = sut.request(url: url, method: 'post');
@@ -103,7 +103,7 @@ void main() {
       expect(res, throwsA(HttpError.badRequest));
     });
 
-    test('Deve retornar UnauthorizedError caso status da requisição seja 401', () async {
+    test('Deve retornar UnauthorizedError caso o status da requisição seja 401', () async {
       mockHttpResponse(401);
 
       final res = sut.request(url: url, method: 'post');
@@ -111,7 +111,7 @@ void main() {
       expect(res, throwsA(HttpError.unauthorized));
     });
 
-    test('Deve retornar ForbiddenError caso status da requisição seja 403', () async {
+    test('Deve retornar ForbiddenError caso o status da requisição seja 403', () async {
       mockHttpResponse(403);
 
       final res = sut.request(url: url, method: 'post');
@@ -119,7 +119,15 @@ void main() {
       expect(res, throwsA(HttpError.forbidden));
     });
 
-    test('Deve retornar ServerError caso status da requisição seja 500', () async {
+    test('Deve retornar NotFoundError caso o status da requisição seja 404', () async {
+      mockHttpResponse(404);
+
+      final res = sut.request(url: url, method: 'post');
+
+      expect(res, throwsA(HttpError.notFound));
+    });
+
+    test('Deve retornar ServerError caso o status da requisição seja 500', () async {
       mockHttpResponse(500);
 
       final res = sut.request(url: url, method: 'post');
