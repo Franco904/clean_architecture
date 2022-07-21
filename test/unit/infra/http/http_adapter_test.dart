@@ -111,6 +111,14 @@ void main() {
       expect(res, throwsA(HttpError.unauthorized));
     });
 
+    test('Deve retornar ForbiddenError caso status da requisição seja 403', () async {
+      mockHttpResponse(403);
+
+      final res = sut.request(url: url, method: 'post');
+
+      expect(res, throwsA(HttpError.forbidden));
+    });
+
     test('Deve retornar ServerError caso status da requisição seja 500', () async {
       mockHttpResponse(500);
 

@@ -32,6 +32,7 @@ class HttpAdapter implements IHttpClient {
 
     if (res.statusCode == 400) throw HttpError.badRequest;
     if (res.statusCode == 401) throw HttpError.unauthorized;
+    if (res.statusCode == 403) throw HttpError.forbidden;
 
     throw HttpError.serverError;
   }
