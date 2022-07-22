@@ -12,22 +12,11 @@ void main() {
   late MockClient mockClient;
   late String url;
 
-  PostExpectation mockExpectation({bool hasBody = false}) {
-    return when(mockClient.post(Uri.parse(url), headers: anyNamed('headers'), body: hasBody ? anyNamed('body') : null));
-  }
-
-  void mockHttpResponse(statusCode, {String responseBody = '{"any_key":"any_value"}', bool hasRequestBody = false}) {
-    mockExpectation(hasBody: hasRequestBody).thenAnswer((_) async => Response(responseBody, statusCode));
-  }
-
   setUp(() {
     mockClient = MockClient();
     url = faker.internet.httpUrl();
 
     sut = HttpAdapter(mockClient);
-
-    // Padrão de mock/stub antes de cada teste de sucesso
-    mockHttpResponse(200);
   });
 
   tearDown(() {
@@ -44,6 +33,21 @@ void main() {
   });
 
   group('POST | ', () {
+    PostExpectation mockExpectation({bool hasBody = false}) {
+      return when(mockClient.post(Uri.parse(url), headers: anyNamed('headers'), body: hasBody ? anyNamed('body') : null));
+    }
+
+    void mockHttpResponse(statusCode, {String responseBody = '{"any_key":"any_value"}', bool hasRequestBody = false}) {
+      mockExpectation(hasBody: hasRequestBody).thenAnswer((_) async => Response(responseBody, statusCode));
+    }
+
+    void mockHttpError() => mockExpectation().thenThrow(Exception());
+
+    setUp(() {
+      // Padrão de mock/stub antes de cada teste de sucesso
+      mockHttpResponse(200);
+    });
+
     test('Deve chamar requisição POST com valores corretos', () {
       mockHttpResponse(200, hasRequestBody: true);
 
@@ -137,6 +141,14 @@ void main() {
 
     test('Deve retornar ServerError caso o status da requisição seja 500', () async {
       mockHttpResponse(500);
+
+      final res = sut.request(url: url, method: 'post');
+
+      expect(res, throwsA(HttpError.serverError));
+    });
+
+    test('Deve retornar ServerError caso a requisição retorne uma exceção', () async {
+      mockHttpError();
 
       final res = sut.request(url: url, method: 'post');
 

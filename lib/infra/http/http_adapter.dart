@@ -22,10 +22,14 @@ class HttpAdapter implements IHttpClient {
     final jsonBody = body != null ? jsonEncode(body) : null;
     Response res = Response('', 500);
 
-    switch (method) {
-      case 'post':
-        res = await client.post(Uri.parse(url!), headers: headers, body: jsonBody);
-        break;
+    try {
+      switch (method) {
+        case 'post':
+          res = await client.post(Uri.parse(url!), headers: headers, body: jsonBody);
+          break;
+      }
+    } catch (_) {
+      throw HttpError.serverError;
     }
 
     return _checkResponseAndReturn(res);
