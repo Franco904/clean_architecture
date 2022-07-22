@@ -16,7 +16,7 @@ class RemoteAuthentication implements Authentication {
   });
 
   @override
-  Future<Account> auth(AuthenticationParams params) async {
+  Future<Account?> auth(AuthenticationParams params) async {
     try {
       final httpResponse = await httpClient.request(
         url: url,
@@ -24,7 +24,7 @@ class RemoteAuthentication implements Authentication {
         body: RemoteAuthenticationParams.fromDomain(params).toJson(),
       );
 
-      return RemoteAccountModel.fromJson(httpResponse).toEntity();
+      return httpResponse == null ? null : RemoteAccountModel.fromJson(httpResponse).toEntity();
     } on HttpError catch (error) {
       throw error == HttpError.unauthorized ? DomainErrors.invalidCredentials : DomainErrors.unexpected;
     }

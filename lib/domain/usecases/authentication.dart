@@ -1,7 +1,7 @@
 import 'package:clean_architecture/domain/entities/account.dart';
 
 abstract class Authentication {
-  Future<Account> auth(AuthenticationParams params);
+  Future<Account?> auth(AuthenticationParams params);
 }
 
 class AuthenticationParams {
