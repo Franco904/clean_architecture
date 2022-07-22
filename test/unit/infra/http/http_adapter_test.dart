@@ -4,6 +4,7 @@ import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../mock/http/client_mock.dart';
+
 import 'package:clean_architecture/data/utils/utils.dart';
 import 'package:clean_architecture/infra/http/http.dart';
 
