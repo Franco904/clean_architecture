@@ -1,3 +1,4 @@
+import 'package:clean_architecture/ui/core/app_theme.dart';
 import 'package:clean_architecture/ui/pages/pages.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,7 @@ class CleanArchitectureApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Clean Architecture',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: getAppTheme(),
       home: const LoginPage(),
     );
   }
