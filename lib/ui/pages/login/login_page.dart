@@ -10,7 +10,7 @@ class LoginPage extends StatelessWidget {
     GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Title')),
+      appBar: AppBar(backgroundColor: Theme.of(context).primaryColor),
       body: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 1280),
         child: ListView(
