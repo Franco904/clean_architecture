@@ -7,7 +7,7 @@ import 'package:clean_architecture/domain/usecases/usecases.dart';
 import 'package:clean_architecture/domain/utils/domain_errors.dart';
 
 class RemoteAuthentication implements Authentication {
-  final IHttpClient httpClient;
+  final IHttpAdapter httpClient;
   final String url;
 
   RemoteAuthentication({

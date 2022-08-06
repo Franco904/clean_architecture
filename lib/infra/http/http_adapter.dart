@@ -4,7 +4,7 @@ import 'package:http/http.dart';
 import 'package:clean_architecture/data/interfaces/interfaces.dart';
 import 'package:clean_architecture/data/utils/utils.dart';
 
-class HttpAdapter implements IHttpClient {
+class HttpAdapter implements IHttpAdapter {
   Client client;
 
   HttpAdapter(this.client);
