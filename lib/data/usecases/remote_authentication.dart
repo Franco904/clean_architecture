@@ -7,18 +7,18 @@ import 'package:clean_architecture/domain/usecases/usecases.dart';
 import 'package:clean_architecture/domain/utils/domain_errors.dart';
 
 class RemoteAuthentication implements Authentication {
-  final IHttpClient httpClient;
+  final IHttpAdapter httpAdapter;
   final String url;
 
   RemoteAuthentication({
-    required this.httpClient,
+    required this.httpAdapter,
     required this.url,
   });
 
   @override
   Future<Account?> auth(AuthenticationParams params) async {
     try {
-      final httpResponse = await httpClient.request(
+      final httpResponse = await httpAdapter.request(
         url: url,
         method: 'post',
         body: RemoteAuthenticationParams.fromDomain(params).toJson(),

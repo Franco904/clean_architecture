@@ -1,1 +1,1 @@
-export './ihttp_client.dart';
+export 'ihttp_adapter.dart';

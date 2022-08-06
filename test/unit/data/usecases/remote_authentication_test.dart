@@ -13,10 +13,10 @@ void main() {
   group('RemoteAuthentication | ', () {
     late RemoteAuthentication sut;
     late AuthenticationParams params;
-    late MockHttpClient mockHttpClient;
+    late MockHttpAdapter mockHttpAdapter;
     late String url;
 
-    PostExpectation mockExpectation() => when(mockHttpClient.request(url: anyNamed('url'), method: anyNamed('method'), body: anyNamed('body')));
+    PostExpectation mockExpectation() => when(mockHttpAdapter.request(url: anyNamed('url'), method: anyNamed('method'), body: anyNamed('body')));
 
     void mockHttpData(Map<String, dynamic> data) => mockExpectation().thenAnswer((_) async => data);
 
@@ -28,11 +28,11 @@ void main() {
     Map<String, dynamic> validMockData() => {'accessToken': faker.guid.guid(), 'name': faker.person.name()};
 
     setUp(() {
-      mockHttpClient = MockHttpClient();
+      mockHttpAdapter = MockHttpAdapter();
       url = faker.internet.httpUrl();
 
       // sut: "System under test" (classe sendo testada)
-      sut = RemoteAuthentication(httpClient: mockHttpClient, url: url);
+      sut = RemoteAuthentication(httpAdapter: mockHttpAdapter, url: url);
 
       params = AuthenticationParams(
         email: faker.internet.email(),
@@ -41,7 +41,7 @@ void main() {
     });
 
     tearDown(() {
-      reset(mockHttpClient);
+      reset(mockHttpAdapter);
       resetMockitoState();
     });
 
@@ -50,7 +50,7 @@ void main() {
 
       await sut.auth(params);
 
-      verify(mockHttpClient.request(
+      verify(mockHttpAdapter.request(
         url: url,
         method: 'post',
         body: {'email': params.email, 'password': params.password},
