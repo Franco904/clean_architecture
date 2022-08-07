@@ -37,13 +37,13 @@ class LoginPage extends StatelessWidget {
                     const SizedBox(height: 24),
                     Row(
                       children: <Widget>[
-                        ElevatedButton(
-                          onPressed: () {},
-                          child: const Text('Entrar'),
+                        const ElevatedButton(
+                          onPressed: null,
+                          child: Text('Entrar'),
                         ),
                         const SizedBox(height: 16),
                         ElevatedButton.icon(
-                          onPressed: () {},
+                          onPressed: null,
                           icon: const Icon(Icons.person),
                           label: const Text('Criar conta'),
                         ),
