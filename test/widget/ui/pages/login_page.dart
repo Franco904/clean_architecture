@@ -6,39 +6,44 @@ import 'package:clean_architecture/ui/pages/pages.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  // Testes mais complexos
-  testWidgets('Deve carregar tela com estado inicial correto', (tester) async {
+  Future<void> loadLoginPage(WidgetTester tester) async {
     const loginPage = MaterialApp(home: LoginPage());
-
     await tester.pumpWidget(loginPage);
-    await tester.pumpAndSettle();
+  }
 
-    final emailFieldChildren = find.descendant(
-      of: find.bySemanticsLabel('Email'),
-      matching: find.byType(Text),
-    );
+  // Testes mais complexos
+  group('LoginPage Tests | ', () {
+    testWidgets('Deve carregar tela com estado inicial correto', (tester) async {
+      await loadLoginPage(tester);
+      await tester.pumpAndSettle();
 
-    final passwordFieldChildren = find.descendant(
-      of: find.bySemanticsLabel('Senha'),
-      matching: find.byType(Text),
-    );
+      final emailFieldChildren = find.descendant(
+        of: find.bySemanticsLabel('Email'),
+        matching: find.byType(Text),
+      );
 
-    final loginButton = tester.firstWidget<ElevatedButton>(find.byType(ElevatedButton));
+      final passwordFieldChildren = find.descendant(
+        of: find.bySemanticsLabel('Senha'),
+        matching: find.byType(Text),
+      );
 
-    expect(
-      emailFieldChildren,
-      findsOneWidget,
-      reason:
-          'Quando um TextFormField possui somente um filho Text, significa que ele não possui erros, sabendo que um de seus filhos sempre será um label text.',
-    );
+      final loginButton = tester.firstWidget<ElevatedButton>(find.byType(ElevatedButton));
 
-    expect(
-      passwordFieldChildren,
-      findsOneWidget,
-      reason:
-          'Quando um TextFormField possui somente um filho Text, significa que ele não possui erros, sabendo que um de seus filhos sempre será um label text.',
-    );
+      expect(
+        emailFieldChildren,
+        findsOneWidget,
+        reason:
+            'Quando um TextFormField possui somente um filho Text, significa que ele não possui erros, sabendo que um de seus filhos sempre será um label text.',
+      );
 
-    expect(loginButton.onPressed, null);
+      expect(
+        passwordFieldChildren,
+        findsOneWidget,
+        reason:
+            'Quando um TextFormField possui somente um filho Text, significa que ele não possui erros, sabendo que um de seus filhos sempre será um label text.',
+      );
+
+      expect(loginButton.onPressed, null);
+    });
   });
 }
