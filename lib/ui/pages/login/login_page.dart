@@ -39,14 +39,20 @@ class LoginPage extends StatelessWidget {
                         );
                       }
                     ),
-                    TextFormField(
-                      key: const Key('Senha'),
-                      decoration: const InputDecoration(
-                        labelText: 'Senha',
-                        icon: Icon(Icons.password),
-                      ),
-                      obscureText: true,
-                      onChanged: presenter.validatePassword,
+                    StreamBuilder<String>(
+                      stream: presenter.passwordErrorStream,
+                      builder: (_, snapshot) {
+                        return TextFormField(
+                          key: const Key('Senha'),
+                          decoration: InputDecoration(
+                            labelText: 'Senha',
+                            icon: Icon(Icons.password, color: Theme.of(context).primaryColorLight),
+                            errorText: snapshot.data == null ? null : (snapshot.data!.isEmpty ? null : snapshot.data),
+                          ),
+                          obscureText: true,
+                          onChanged: presenter.validatePassword,
+                        );
+                      }
                     ),
                     const SizedBox(height: 24),
                     Row(

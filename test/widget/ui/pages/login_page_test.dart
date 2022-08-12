@@ -12,15 +12,21 @@ class MockLoginPresenter extends Mock implements ILoginPresenter {}
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  // Testes mais complexos
   group('LoginPage Tests | ', () {
     late MockLoginPresenter mockPresenter;
+
     late StreamController<String> emailErrorController;
+    late StreamController<String> passwordErrorController;
 
     Future<void> loadLoginPage(WidgetTester tester) async {
       mockPresenter = MockLoginPresenter();
 
       emailErrorController = StreamController<String>();
+      passwordErrorController = StreamController<String>();
+
       when(mockPresenter.emailErrorStream).thenAnswer((_) => emailErrorController.stream);
+      when(mockPresenter.passwordErrorStream).thenAnswer((_) => passwordErrorController.stream);
 
       final page = MaterialApp(home: LoginPage(mockPresenter));
 
@@ -118,6 +124,43 @@ void main() {
       );
 
       expect(emailFieldChildren, findsOneWidget);
+    });
+    
+    testWidgets('Deve mostrar erro caso a senha informada esteja inválida', (tester) async {
+      await loadLoginPage(tester);
+
+      passwordErrorController.add('any error');
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      expect(find.text('any error'), findsOneWidget);
+    });
+
+    testWidgets('Não deve apresentar erro caso a senha informada seja válida', (tester) async {
+      await loadLoginPage(tester);
+
+      passwordErrorController.add(null as String);
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      final passwordFieldChildren = find.descendant(
+        of: find.bySemanticsLabel('Senha'),
+        matching: find.byType(Text),
+      );
+
+      expect(passwordFieldChildren, findsOneWidget);
+    });
+
+    testWidgets('Não deve apresentar erro caso a senha informada seja um texto vazio', (tester) async {
+      await loadLoginPage(tester);
+
+      passwordErrorController.add('');
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      final passwordFieldChildren = find.descendant(
+        of: find.bySemanticsLabel('Senha'),
+        matching: find.byType(Text),
+      );
+
+      expect(passwordFieldChildren, findsOneWidget);
     });
   });
 }
