@@ -11,7 +11,7 @@ class CleanArchitectureApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Clean Architecture',
       theme: getAppTheme(),
-      home: const LoginPage(),
+      home: LoginPage(null as ILoginPresenter),
     );
   }
 }

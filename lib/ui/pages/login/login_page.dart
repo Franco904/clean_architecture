@@ -1,9 +1,10 @@
+import 'package:clean_architecture/ui/pages/login/login.dart';
 import 'package:flutter/material.dart';
 
-import 'local_widgets/local_widgets.dart';
-
 class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  final ILoginPresenter presenter;
+
+  const LoginPage(this.presenter, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +24,29 @@ class LoginPage extends StatelessWidget {
                 key: formKey,
                 child: Column(
                   children: <Widget>[
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        icon: Icon(Icons.email, color: Theme.of(context).primaryColorLight),
-                      ),
-                      keyboardType: TextInputType.emailAddress,
+                    StreamBuilder<String>(
+                      stream: presenter.emailErrorStream,
+                      builder: (_, snapshot) {
+                        return TextFormField(
+                          key: const Key('Email'),
+                          decoration: InputDecoration(
+                            labelText: 'Email',
+                            icon: Icon(Icons.email, color: Theme.of(context).primaryColorLight),
+                            errorText: snapshot.data,
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          onChanged: presenter.validateEmail,
+                        );
+                      }
                     ),
                     TextFormField(
-                      decoration: const InputDecoration(labelText: 'Senha', icon: Icon(Icons.password)),
+                      key: const Key('Senha'),
+                      decoration: const InputDecoration(
+                        labelText: 'Senha',
+                        icon: Icon(Icons.password),
+                      ),
                       obscureText: true,
+                      onChanged: presenter.validatePassword,
                     ),
                     const SizedBox(height: 24),
                     Row(
