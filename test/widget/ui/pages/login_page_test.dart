@@ -18,15 +18,18 @@ void main() {
 
     late StreamController<String> emailErrorController;
     late StreamController<String> passwordErrorController;
+    late StreamController<bool> isFormValidController;
 
     Future<void> loadLoginPage(WidgetTester tester) async {
       mockPresenter = MockLoginPresenter();
 
       emailErrorController = StreamController<String>();
       passwordErrorController = StreamController<String>();
+      isFormValidController = StreamController<bool>();
 
       when(mockPresenter.emailErrorStream).thenAnswer((_) => emailErrorController.stream);
       when(mockPresenter.passwordErrorStream).thenAnswer((_) => passwordErrorController.stream);
+      when(mockPresenter.isFormValidStream).thenAnswer((_) => isFormValidController.stream);
 
       final page = MaterialApp(home: LoginPage(mockPresenter));
 
@@ -54,7 +57,7 @@ void main() {
         matching: find.byType(Text),
       );
 
-      final loginButton = tester.firstWidget<ElevatedButton>(find.byType(ElevatedButton));
+      final loginButton = tester.widget<ElevatedButton>(find.byKey(const Key('EntrarButton')));
 
       expect(
         emailFieldChildren,
@@ -125,7 +128,7 @@ void main() {
 
       expect(emailFieldChildren, findsOneWidget);
     });
-    
+
     testWidgets('Deve mostrar erro caso a senha informada esteja inválida', (tester) async {
       await loadLoginPage(tester);
 
@@ -161,6 +164,28 @@ void main() {
       );
 
       expect(passwordFieldChildren, findsOneWidget);
+    });
+
+    testWidgets('Deve habilitar botão Entrar caso o formulário esteja válido', (tester) async {
+      await loadLoginPage(tester);
+
+      isFormValidController.add(true);
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      final loginButton = tester.widget<ElevatedButton>(find.byKey(const Key('EntrarButton')));
+
+      expect(loginButton.onPressed, mockPresenter.save);
+    });
+
+    testWidgets('Deve desabilitar botão Entrar caso o formulário esteja inválido', (tester) async {
+      await loadLoginPage(tester);
+
+      isFormValidController.add(false);
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      final loginButton = tester.widget<ElevatedButton>(find.byKey(const Key('EntrarButton')));
+
+      expect(loginButton.onPressed, null);
     });
   });
 }

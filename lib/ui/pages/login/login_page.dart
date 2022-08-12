@@ -25,44 +25,48 @@ class LoginPage extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     StreamBuilder<String>(
-                      stream: presenter.emailErrorStream,
-                      builder: (_, snapshot) {
-                        return TextFormField(
-                          key: const Key('Email'),
-                          decoration: InputDecoration(
-                            labelText: 'Email',
-                            icon: Icon(Icons.email, color: Theme.of(context).primaryColorLight),
-                            errorText: snapshot.data == null ? null : (snapshot.data!.isEmpty ? null : snapshot.data),
-                          ),
-                          keyboardType: TextInputType.emailAddress,
-                          onChanged: presenter.validateEmail,
-                        );
-                      }
-                    ),
+                        stream: presenter.emailErrorStream,
+                        builder: (_, snapshot) {
+                          return TextFormField(
+                            key: const Key('Email'),
+                            decoration: InputDecoration(
+                              labelText: 'Email',
+                              icon: Icon(Icons.email, color: Theme.of(context).primaryColorLight),
+                              errorText: snapshot.data == null ? null : (snapshot.data!.isEmpty ? null : snapshot.data),
+                            ),
+                            keyboardType: TextInputType.emailAddress,
+                            onChanged: presenter.validateEmail,
+                          );
+                        }),
                     StreamBuilder<String>(
-                      stream: presenter.passwordErrorStream,
-                      builder: (_, snapshot) {
-                        return TextFormField(
-                          key: const Key('Senha'),
-                          decoration: InputDecoration(
-                            labelText: 'Senha',
-                            icon: Icon(Icons.password, color: Theme.of(context).primaryColorLight),
-                            errorText: snapshot.data == null ? null : (snapshot.data!.isEmpty ? null : snapshot.data),
-                          ),
-                          obscureText: true,
-                          onChanged: presenter.validatePassword,
-                        );
-                      }
-                    ),
+                        stream: presenter.passwordErrorStream,
+                        builder: (_, snapshot) {
+                          return TextFormField(
+                            key: const Key('Senha'),
+                            decoration: InputDecoration(
+                              labelText: 'Senha',
+                              icon: Icon(Icons.password, color: Theme.of(context).primaryColorLight),
+                              errorText: snapshot.data == null ? null : (snapshot.data!.isEmpty ? null : snapshot.data),
+                            ),
+                            obscureText: true,
+                            onChanged: presenter.validatePassword,
+                          );
+                        }),
                     const SizedBox(height: 24),
                     Row(
                       children: <Widget>[
-                        const ElevatedButton(
-                          onPressed: null,
-                          child: Text('Entrar'),
-                        ),
+                        StreamBuilder<bool>(
+                            stream: presenter.isFormValidStream,
+                            builder: (_, snapshot) {
+                              return ElevatedButton(
+                                key: const Key('EntrarButton'),
+                                onPressed: snapshot.data == true ? presenter.save : null,
+                                child: const Text('Entrar'),
+                              );
+                            }),
                         const SizedBox(height: 16),
                         ElevatedButton.icon(
+                          key: const Key('CriarContaButton'),
                           onPressed: null,
                           icon: const Icon(Icons.person),
                           label: const Text('Criar conta'),
