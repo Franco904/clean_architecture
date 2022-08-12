@@ -12,7 +12,6 @@ class MockLoginPresenter extends Mock implements ILoginPresenter {}
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  // Testes mais complexos
   group('LoginPage Tests | ', () {
     late MockLoginPresenter mockPresenter;
     late StreamController<String> emailErrorController;
@@ -84,13 +83,41 @@ void main() {
       verify(mockPresenter.validatePassword(password));
     });
 
-    testWidgets('Deve mostrar erro se email informado esteja inválido', (tester) async {
+    testWidgets('Deve mostrar erro caso o email informado esteja inválido', (tester) async {
       await loadLoginPage(tester);
 
       emailErrorController.add('any error');
       await tester.pumpAndSettle(const Duration(seconds: 1));
 
       expect(find.text('any error'), findsOneWidget);
+    });
+
+    testWidgets('Não deve apresentar erro caso o email informado seja válido', (tester) async {
+      await loadLoginPage(tester);
+
+      emailErrorController.add(null as String);
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      final emailFieldChildren = find.descendant(
+        of: find.bySemanticsLabel('Email'),
+        matching: find.byType(Text),
+      );
+
+      expect(emailFieldChildren, findsOneWidget);
+    });
+
+    testWidgets('Não deve apresentar erro caso o email informado seja um texto vazio', (tester) async {
+      await loadLoginPage(tester);
+
+      emailErrorController.add('');
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+
+      final emailFieldChildren = find.descendant(
+        of: find.bySemanticsLabel('Email'),
+        matching: find.byType(Text),
+      );
+
+      expect(emailFieldChildren, findsOneWidget);
     });
   });
 }
