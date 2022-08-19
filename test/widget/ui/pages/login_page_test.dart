@@ -18,6 +18,7 @@ void main() {
 
     late StreamController<String> emailErrorController;
     late StreamController<String> passwordErrorController;
+    late StreamController<String?> mainErrorController;
     late StreamController<bool> isFormValidController;
     late StreamController<bool> isLoadingController;
 
@@ -26,11 +27,13 @@ void main() {
 
       emailErrorController = StreamController<String>();
       passwordErrorController = StreamController<String>();
+      mainErrorController = StreamController<String?>();
       isFormValidController = StreamController<bool>();
       isLoadingController = StreamController<bool>();
 
       when(mockPresenter.emailErrorStream).thenAnswer((_) => emailErrorController.stream);
       when(mockPresenter.passwordErrorStream).thenAnswer((_) => passwordErrorController.stream);
+      when(mockPresenter.mainErrorStream).thenAnswer((_) => mainErrorController.stream);
       when(mockPresenter.isFormValidStream).thenAnswer((_) => isFormValidController.stream);
       when(mockPresenter.isLoadingStream).thenAnswer((_) => isLoadingController.stream);
 
@@ -43,6 +46,7 @@ void main() {
     tearDown(() {
       emailErrorController.close();
       passwordErrorController.close();
+      mainErrorController.close();
       isFormValidController.close();
       isLoadingController.close();
 
@@ -233,6 +237,15 @@ void main() {
       await tester.pump();
 
       expect(find.byType(CircularProgressIndicator), findsNothing);
+    });
+
+    testWidgets('Deve mostrar mensagem de erro em snackbar caso o formulário esteja inválido', (tester) async {
+      await loadLoginPage(tester);
+
+      mainErrorController.add('main error');
+      await tester.pumpAndSettle();
+
+      expect(find.text('main error'), findsOneWidget);
     });
   });
 }

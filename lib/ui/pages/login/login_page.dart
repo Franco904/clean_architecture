@@ -44,6 +44,18 @@ class LoginPage extends StatelessWidget {
           }
         });
 
+        presenter.mainErrorStream.listen((errorMessage) {
+          if (errorMessage != null) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              backgroundColor: Colors.black12,
+              content: Text(
+                errorMessage,
+                textAlign: TextAlign.center,
+              ),
+            ));
+          }
+        });
+
         return ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1280),
           child: ListView(
