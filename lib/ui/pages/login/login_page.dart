@@ -1,10 +1,22 @@
 import 'package:clean_architecture/ui/pages/login/login.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   final ILoginPresenter presenter;
 
   const LoginPage(this.presenter, {Key? key}) : super(key: key);
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  @override
+  Future<void> dispose() async {
+    widget.presenter.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +25,7 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(backgroundColor: Theme.of(context).primaryColor),
       body: Builder(builder: (_) {
-        presenter.isLoadingStream.listen((isLoading) async {
+        widget.presenter.isLoadingStream.listen((isLoading) async {
           if (isLoading) {
             await showDialog(
               context: context,
@@ -44,7 +56,7 @@ class LoginPage extends StatelessWidget {
           }
         });
 
-        presenter.mainErrorStream.listen((errorMessage) {
+        widget.presenter.mainErrorStream.listen((errorMessage) {
           if (errorMessage != null) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               backgroundColor: Colors.black12,
@@ -69,7 +81,7 @@ class LoginPage extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       StreamBuilder<String>(
-                          stream: presenter.emailErrorStream,
+                          stream: widget.presenter.emailErrorStream,
                           builder: (_, snapshot) {
                             return TextFormField(
                               key: const Key('email_field'),
@@ -79,11 +91,11 @@ class LoginPage extends StatelessWidget {
                                 errorText: snapshot.data == null ? null : (snapshot.data!.isEmpty ? null : snapshot.data),
                               ),
                               keyboardType: TextInputType.emailAddress,
-                              onChanged: presenter.validateEmail,
+                              onChanged: widget.presenter.validateEmail,
                             );
                           }),
                       StreamBuilder<String>(
-                          stream: presenter.passwordErrorStream,
+                          stream: widget.presenter.passwordErrorStream,
                           builder: (_, snapshot) {
                             return TextFormField(
                               key: const Key('password_field'),
@@ -93,18 +105,18 @@ class LoginPage extends StatelessWidget {
                                 errorText: snapshot.data == null ? null : (snapshot.data!.isEmpty ? null : snapshot.data),
                               ),
                               obscureText: true,
-                              onChanged: presenter.validatePassword,
+                              onChanged: widget.presenter.validatePassword,
                             );
                           }),
                       const SizedBox(height: 24),
                       Row(
                         children: <Widget>[
                           StreamBuilder<bool>(
-                              stream: presenter.isFormValidStream,
+                              stream: widget.presenter.isFormValidStream,
                               builder: (_, snapshot) {
                                 return ElevatedButton(
                                   key: const Key('entrar_button'),
-                                  onPressed: snapshot.data == null ? null : (snapshot.data! ? presenter.auth : null),
+                                  onPressed: snapshot.data == null ? null : (snapshot.data! ? widget.presenter.auth : null),
                                   child: const Text('Entrar'),
                                 );
                               }),

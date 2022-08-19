@@ -247,5 +247,11 @@ void main() {
 
       expect(find.text('main error'), findsOneWidget);
     });
+
+    testWidgets('Deve fechar streams ao chamar dispose do presenter', (tester) async {
+      await loadLoginPage(tester);
+
+      addTearDown(() => verify(mockPresenter.dispose()).called(1));
+    });
   });
 }
