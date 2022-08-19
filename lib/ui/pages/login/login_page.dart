@@ -1,9 +1,7 @@
-import 'package:clean_architecture/ui/utils/spinner_dialog.dart';
 import 'package:clean_architecture/ui/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../global_widgets/global_widgets.dart';
 import 'login.dart';
 
 class LoginPage extends StatefulWidget {
@@ -65,15 +63,7 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(height: 24),
                         Row(
                           children: <Widget>[
-                            StreamBuilder<bool>(
-                                stream: widget.presenter.isFormValidStream,
-                                builder: (_, snapshot) {
-                                  return ElevatedButton(
-                                    key: const Key('entrar_button'),
-                                    onPressed: snapshot.data == null ? null : (snapshot.data! ? widget.presenter.auth : null),
-                                    child: const Text('Entrar'),
-                                  );
-                                }),
+                            const LoginButton(),
                             const SizedBox(height: 16),
                             ElevatedButton.icon(
                               key: const Key('criar_conta_button'),
