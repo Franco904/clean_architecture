@@ -9,7 +9,7 @@ abstract class ILoginPresenter {
 
   void validatePassword(String password);
 
-  void auth();
+  Future<void> auth();
 
   Future<void> dispose();
 }

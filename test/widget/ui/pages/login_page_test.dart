@@ -22,20 +22,35 @@ void main() {
     late StreamController<bool> isFormValidController;
     late StreamController<bool> isLoadingController;
 
-    Future<void> loadLoginPage(WidgetTester tester) async {
-      mockPresenter = MockLoginPresenter();
-
+    void initStreams() {
       emailErrorController = StreamController<String>();
       passwordErrorController = StreamController<String>();
       mainErrorController = StreamController<String?>();
       isFormValidController = StreamController<bool>();
       isLoadingController = StreamController<bool>();
+    }
 
+    void mockStreams() {
       when(mockPresenter.emailErrorStream).thenAnswer((_) => emailErrorController.stream);
       when(mockPresenter.passwordErrorStream).thenAnswer((_) => passwordErrorController.stream);
       when(mockPresenter.mainErrorStream).thenAnswer((_) => mainErrorController.stream);
       when(mockPresenter.isFormValidStream).thenAnswer((_) => isFormValidController.stream);
       when(mockPresenter.isLoadingStream).thenAnswer((_) => isLoadingController.stream);
+    }
+
+    closeStreams() {
+      emailErrorController.close();
+      passwordErrorController.close();
+      mainErrorController.close();
+      isFormValidController.close();
+      isLoadingController.close();
+    }
+
+    Future<void> loadLoginPage(WidgetTester tester) async {
+      mockPresenter = MockLoginPresenter();
+
+      initStreams();
+      mockStreams();
 
       final page = MaterialApp(home: LoginPage(mockPresenter));
 
@@ -44,11 +59,7 @@ void main() {
     }
 
     tearDown(() {
-      emailErrorController.close();
-      passwordErrorController.close();
-      mainErrorController.close();
-      isFormValidController.close();
-      isLoadingController.close();
+      closeStreams();
 
       reset(mockPresenter);
       resetMockitoState();
