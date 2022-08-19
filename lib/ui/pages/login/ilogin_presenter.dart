@@ -7,5 +7,5 @@ abstract class ILoginPresenter {
 
   void validatePassword(String email);
 
-  void save();
+  void auth();
 }

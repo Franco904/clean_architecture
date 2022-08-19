@@ -28,7 +28,7 @@ class LoginPage extends StatelessWidget {
                         stream: presenter.emailErrorStream,
                         builder: (_, snapshot) {
                           return TextFormField(
-                            key: const Key('Email'),
+                            key: const Key('email_field'),
                             decoration: InputDecoration(
                               labelText: 'Email',
                               icon: Icon(Icons.email, color: Theme.of(context).primaryColorLight),
@@ -42,7 +42,7 @@ class LoginPage extends StatelessWidget {
                         stream: presenter.passwordErrorStream,
                         builder: (_, snapshot) {
                           return TextFormField(
-                            key: const Key('Senha'),
+                            key: const Key('password_field'),
                             decoration: InputDecoration(
                               labelText: 'Senha',
                               icon: Icon(Icons.password, color: Theme.of(context).primaryColorLight),
@@ -59,14 +59,14 @@ class LoginPage extends StatelessWidget {
                             stream: presenter.isFormValidStream,
                             builder: (_, snapshot) {
                               return ElevatedButton(
-                                key: const Key('EntrarButton'),
-                                onPressed: snapshot.data == true ? presenter.save : null,
+                                key: const Key('entrar_button'),
+                                onPressed: snapshot.data == null ? null : (snapshot.data! ? presenter.auth : null),
                                 child: const Text('Entrar'),
                               );
                             }),
                         const SizedBox(height: 16),
                         ElevatedButton.icon(
-                          key: const Key('CriarContaButton'),
+                          key: const Key('criar_conta_button'),
                           onPressed: null,
                           icon: const Icon(Icons.person),
                           label: const Text('Criar conta'),
