@@ -80,6 +80,7 @@ void main() {
       );
 
       expect(loginButton.onPressed, null);
+      expect(find.byType(CircularProgressIndicator), findsNothing);
     });
 
     testWidgets('Deve chamar validação de email com valores corretos', (tester) async {
@@ -218,6 +219,20 @@ void main() {
       await tester.pump();
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    });
+
+    testWidgets('Deve esconder estado de loading ao emitir evento', (tester) async {
+      await loadLoginPage(tester);
+
+      isLoadingController.add(true);
+      await tester.pump();
+      await tester.pump();
+
+      isLoadingController.add(false);
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.byType(CircularProgressIndicator), findsNothing);
     });
   });
 }
