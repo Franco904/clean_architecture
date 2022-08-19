@@ -3,25 +3,25 @@ import 'package:provider/provider.dart';
 
 import '../ilogin_presenter.dart';
 
-class EmailInput extends StatelessWidget {
-  const EmailInput({Key? key}) : super(key: key);
+class PasswordInput extends StatelessWidget {
+  const PasswordInput({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final presenter = Provider.of<ILoginPresenter>(context);
 
     return StreamBuilder<String>(
-        stream: presenter.emailErrorStream,
+        stream: presenter.passwordErrorStream,
         builder: (_, snapshot) {
           return TextFormField(
-            key: const Key('email_field'),
+            key: const Key('password_field'),
             decoration: InputDecoration(
-              labelText: 'Email',
-              icon: Icon(Icons.email, color: Theme.of(context).primaryColorLight),
+              labelText: 'Senha',
+              icon: Icon(Icons.password, color: Theme.of(context).primaryColorLight),
               errorText: snapshot.data == null ? null : (snapshot.data!.isEmpty ? null : snapshot.data),
             ),
-            keyboardType: TextInputType.emailAddress,
-            onChanged: presenter.validateEmail,
+            obscureText: true,
+            onChanged: presenter.validatePassword,
           );
         });
   }

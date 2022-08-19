@@ -61,20 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       children: <Widget>[
                         const EmailInput(),
-                        StreamBuilder<String>(
-                            stream: widget.presenter.passwordErrorStream,
-                            builder: (_, snapshot) {
-                              return TextFormField(
-                                key: const Key('password_field'),
-                                decoration: InputDecoration(
-                                  labelText: 'Senha',
-                                  icon: Icon(Icons.password, color: Theme.of(context).primaryColorLight),
-                                  errorText: snapshot.data == null ? null : (snapshot.data!.isEmpty ? null : snapshot.data),
-                                ),
-                                obscureText: true,
-                                onChanged: widget.presenter.validatePassword,
-                              );
-                            }),
+                        const PasswordInput(),
                         const SizedBox(height: 24),
                         Row(
                           children: <Widget>[
