@@ -1,5 +1,9 @@
-import 'package:clean_architecture/ui/pages/login/login.dart';
+import 'package:clean_architecture/ui/utils/spinner_dialog.dart';
+import 'package:clean_architecture/ui/utils/utils.dart';
 import 'package:flutter/material.dart';
+
+import '../../global_widgets/global_widgets.dart';
+import 'login.dart';
 
 class LoginPage extends StatefulWidget {
   final ILoginPresenter presenter;
@@ -27,28 +31,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Builder(builder: (_) {
         widget.presenter.isLoadingStream.listen((isLoading) async {
           if (isLoading) {
-            await showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (_) {
-                return SimpleDialog(
-                  children: <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        CircularProgressIndicator(),
-                        SizedBox(height: 8),
-                        Text(
-                          'Aguarde ...',
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              },
-            );
+            showSpinnerDialog(context);
           } else {
             if (Navigator.canPop(context)) {
               Navigator.of(context).pop();
@@ -58,13 +41,7 @@ class _LoginPageState extends State<LoginPage> {
 
         widget.presenter.mainErrorStream.listen((errorMessage) {
           if (errorMessage != null) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              backgroundColor: Colors.black12,
-              content: Text(
-                errorMessage,
-                textAlign: TextAlign.center,
-              ),
-            ));
+            showErrorMessage(context, errorMessage);
           }
         });
 
