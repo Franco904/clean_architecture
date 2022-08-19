@@ -19,6 +19,7 @@ void main() {
     late StreamController<String> emailErrorController;
     late StreamController<String> passwordErrorController;
     late StreamController<bool> isFormValidController;
+    late StreamController<bool> isLoadingController;
 
     Future<void> loadLoginPage(WidgetTester tester) async {
       mockPresenter = MockLoginPresenter();
@@ -26,10 +27,12 @@ void main() {
       emailErrorController = StreamController<String>();
       passwordErrorController = StreamController<String>();
       isFormValidController = StreamController<bool>();
+      isLoadingController = StreamController<bool>();
 
       when(mockPresenter.emailErrorStream).thenAnswer((_) => emailErrorController.stream);
       when(mockPresenter.passwordErrorStream).thenAnswer((_) => passwordErrorController.stream);
       when(mockPresenter.isFormValidStream).thenAnswer((_) => isFormValidController.stream);
+      when(mockPresenter.isLoadingStream).thenAnswer((_) => isLoadingController.stream);
 
       final page = MaterialApp(home: LoginPage(mockPresenter));
 
@@ -41,6 +44,7 @@ void main() {
       emailErrorController.close();
       passwordErrorController.close();
       isFormValidController.close();
+      isLoadingController.close();
 
       reset(mockPresenter);
       resetMockitoState();
@@ -205,5 +209,15 @@ void main() {
 
     //   verify(mockPresenter.auth).called(1);
     // });
+
+    testWidgets('Deve mostrar estado de loading ao emitir evento', (tester) async {
+      await loadLoginPage(tester);
+
+      isLoadingController.add(true);
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    });
   });
 }

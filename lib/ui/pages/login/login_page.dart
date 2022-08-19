@@ -12,74 +12,103 @@ class LoginPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(backgroundColor: Theme.of(context).primaryColor),
-      body: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1280),
-        child: ListView(
-          children: <Widget>[
-            const LoginHeader(),
-            const Headline1(),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-              child: Form(
-                key: formKey,
-                child: Column(
+      body: Builder(builder: (_) {
+        presenter.isLoadingStream.listen((isLoading) async {
+          if (isLoading) {
+            await showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (_) {
+                return SimpleDialog(
                   children: <Widget>[
-                    StreamBuilder<String>(
-                        stream: presenter.emailErrorStream,
-                        builder: (_, snapshot) {
-                          return TextFormField(
-                            key: const Key('email_field'),
-                            decoration: InputDecoration(
-                              labelText: 'Email',
-                              icon: Icon(Icons.email, color: Theme.of(context).primaryColorLight),
-                              errorText: snapshot.data == null ? null : (snapshot.data!.isEmpty ? null : snapshot.data),
-                            ),
-                            keyboardType: TextInputType.emailAddress,
-                            onChanged: presenter.validateEmail,
-                          );
-                        }),
-                    StreamBuilder<String>(
-                        stream: presenter.passwordErrorStream,
-                        builder: (_, snapshot) {
-                          return TextFormField(
-                            key: const Key('password_field'),
-                            decoration: InputDecoration(
-                              labelText: 'Senha',
-                              icon: Icon(Icons.password, color: Theme.of(context).primaryColorLight),
-                              errorText: snapshot.data == null ? null : (snapshot.data!.isEmpty ? null : snapshot.data),
-                            ),
-                            obscureText: true,
-                            onChanged: presenter.validatePassword,
-                          );
-                        }),
-                    const SizedBox(height: 24),
-                    Row(
-                      children: <Widget>[
-                        StreamBuilder<bool>(
-                            stream: presenter.isFormValidStream,
-                            builder: (_, snapshot) {
-                              return ElevatedButton(
-                                key: const Key('entrar_button'),
-                                onPressed: snapshot.data == null ? null : (snapshot.data! ? presenter.auth : null),
-                                child: const Text('Entrar'),
-                              );
-                            }),
-                        const SizedBox(height: 16),
-                        ElevatedButton.icon(
-                          key: const Key('criar_conta_button'),
-                          onPressed: null,
-                          icon: const Icon(Icons.person),
-                          label: const Text('Criar conta'),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        CircularProgressIndicator(),
+                        SizedBox(height: 8),
+                        Text(
+                          'Aguarde ...',
+                          textAlign: TextAlign.center,
                         ),
                       ],
-                    )
+                    ),
                   ],
+                );
+              },
+            );
+          }
+        });
+
+        return ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1280),
+          child: ListView(
+            children: <Widget>[
+              const LoginHeader(),
+              const Headline1(),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    children: <Widget>[
+                      StreamBuilder<String>(
+                          stream: presenter.emailErrorStream,
+                          builder: (_, snapshot) {
+                            return TextFormField(
+                              key: const Key('email_field'),
+                              decoration: InputDecoration(
+                                labelText: 'Email',
+                                icon: Icon(Icons.email, color: Theme.of(context).primaryColorLight),
+                                errorText: snapshot.data == null ? null : (snapshot.data!.isEmpty ? null : snapshot.data),
+                              ),
+                              keyboardType: TextInputType.emailAddress,
+                              onChanged: presenter.validateEmail,
+                            );
+                          }),
+                      StreamBuilder<String>(
+                          stream: presenter.passwordErrorStream,
+                          builder: (_, snapshot) {
+                            return TextFormField(
+                              key: const Key('password_field'),
+                              decoration: InputDecoration(
+                                labelText: 'Senha',
+                                icon: Icon(Icons.password, color: Theme.of(context).primaryColorLight),
+                                errorText: snapshot.data == null ? null : (snapshot.data!.isEmpty ? null : snapshot.data),
+                              ),
+                              obscureText: true,
+                              onChanged: presenter.validatePassword,
+                            );
+                          }),
+                      const SizedBox(height: 24),
+                      Row(
+                        children: <Widget>[
+                          StreamBuilder<bool>(
+                              stream: presenter.isFormValidStream,
+                              builder: (_, snapshot) {
+                                return ElevatedButton(
+                                  key: const Key('entrar_button'),
+                                  onPressed: snapshot.data == null ? null : (snapshot.data! ? presenter.auth : null),
+                                  child: const Text('Entrar'),
+                                );
+                              }),
+                          const SizedBox(height: 16),
+                          ElevatedButton.icon(
+                            key: const Key('criar_conta_button'),
+                            onPressed: null,
+                            icon: const Icon(Icons.person),
+                            label: const Text('Criar conta'),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
+            ],
+          ),
+        );
+      }),
     );
   }
 }
