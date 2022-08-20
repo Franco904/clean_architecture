@@ -1,7 +1,7 @@
-abstract class IHttpAdapter {
+abstract class HttpAdapter {
   Future<Map<String, dynamic>?> request({
     required String? url,
     required String? method,
-    required Map<String, String>? body,
+    Map<String, String>? body,
   });
 }

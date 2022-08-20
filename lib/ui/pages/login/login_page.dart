@@ -1,11 +1,12 @@
-import 'package:clean_architecture/ui/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../contracts/contracts.dart';
+import '../../utils/utils.dart';
 import 'login.dart';
 
 class LoginPage extends StatefulWidget {
-  final ILoginPresenter presenter;
+  final LoginPresenter presenter;
 
   const LoginPage(this.presenter, {Key? key}) : super(key: key);
 

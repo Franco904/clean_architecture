@@ -1,13 +1,10 @@
-import 'package:clean_architecture/data/interfaces/interfaces.dart';
-import 'package:clean_architecture/data/models/models.dart';
-import 'package:clean_architecture/data/utils/utils.dart';
-
-import 'package:clean_architecture/domain/entities/entities.dart';
-import 'package:clean_architecture/domain/usecases/usecases.dart';
-import 'package:clean_architecture/domain/utils/domain_errors.dart';
+import '../../contracts/contracts.dart';
+import '../../domain/domain.dart';
+import '../models/models.dart';
+import '../utils/utils.dart';
 
 class RemoteAuthentication implements Authentication {
-  final IHttpAdapter httpAdapter;
+  final HttpAdapter httpAdapter;
   final String url;
 
   RemoteAuthentication({

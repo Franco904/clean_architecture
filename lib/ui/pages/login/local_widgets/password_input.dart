@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../ilogin_presenter.dart';
+import '../../../../contracts/contracts.dart';
 
 class PasswordInput extends StatelessWidget {
   const PasswordInput({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final presenter = Provider.of<ILoginPresenter>(context);
+    final presenter = Provider.of<LoginPresenter>(context);
 
     return StreamBuilder<String>(
         stream: presenter.passwordErrorStream,

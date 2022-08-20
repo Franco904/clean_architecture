@@ -1,5 +1,5 @@
-import 'package:clean_architecture/data/utils/utils.dart';
-import 'package:clean_architecture/domain/entities/entities.dart';
+import '../../domain/domain.dart';
+import '../utils/utils.dart';
 
 class RemoteAccountModel {
   final String accessToken;

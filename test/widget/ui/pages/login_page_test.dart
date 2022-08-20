@@ -1,18 +1,18 @@
 import 'dart:async';
 
 import 'package:faker/faker.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:clean_architecture/ui/pages/pages.dart';
+import 'package:flutter/material.dart';
 import 'package:mockito/mockito.dart';
 
-class MockLoginPresenter extends Mock implements ILoginPresenter {}
+import 'package:clean_architecture/contracts/contracts.dart';
+import 'package:clean_architecture/ui/ui.dart';
+
+class MockLoginPresenter extends Mock implements LoginPresenter {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  // Testes mais complexos
   group('LoginPage Tests | ', () {
     late MockLoginPresenter mockPresenter;
 

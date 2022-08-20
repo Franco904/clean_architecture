@@ -1,13 +1,12 @@
-import 'package:clean_architecture/data/usecases/remote_authentication.dart';
-import 'package:clean_architecture/data/utils/utils.dart';
-
-import 'package:clean_architecture/domain/usecases/usecases.dart';
-import 'package:clean_architecture/domain/utils/utils.dart';
-import '../../../mock/http/http_client_mock.dart';
-
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+
+import 'package:clean_architecture/contracts/contracts.dart';
+import 'package:clean_architecture/data/data.dart';
+import 'package:clean_architecture/domain/domain.dart';
+
+class MockHttpAdapter extends Mock implements HttpAdapter {}
 
 void main() {
   group('RemoteAuthentication | ', () {

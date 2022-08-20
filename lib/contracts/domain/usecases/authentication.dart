@@ -1,4 +1,4 @@
-import 'package:clean_architecture/domain/entities/account.dart';
+import '../../../domain/domain.dart';
 
 abstract class Authentication {
   Future<Account?> auth(AuthenticationParams params);

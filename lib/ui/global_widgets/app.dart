@@ -1,6 +1,8 @@
-import 'package:clean_architecture/ui/core/app_theme.dart';
-import 'package:clean_architecture/ui/pages/pages.dart';
 import 'package:flutter/material.dart';
+
+import '../../contracts/contracts.dart';
+import '../core/core.dart';
+import '../pages/pages.dart';
 
 class CleanArchitectureApp extends StatelessWidget {
   const CleanArchitectureApp({Key? key}) : super(key: key);
@@ -11,7 +13,7 @@ class CleanArchitectureApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Clean Architecture',
       theme: getAppTheme(),
-      home: LoginPage(null as ILoginPresenter),
+      home: LoginPage(null as LoginPresenter),
     );
   }
 }

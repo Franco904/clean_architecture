@@ -3,10 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../mock/http/client_mock.dart';
+import 'package:clean_architecture/contracts/contracts.dart';
+import 'package:clean_architecture/data/data.dart';
+import 'package:clean_architecture/infra/infra.dart';
 
-import 'package:clean_architecture/data/utils/utils.dart';
-import 'package:clean_architecture/infra/http/http.dart';
+class MockClient extends Mock implements Client {}
 
 void main() {
   late HttpAdapter sut;
@@ -17,7 +18,7 @@ void main() {
     mockClient = MockClient();
     url = faker.internet.httpUrl();
 
-    sut = HttpAdapter(mockClient);
+    sut = HttpHandlerAdapter(mockClient);
   });
 
   tearDown(() {

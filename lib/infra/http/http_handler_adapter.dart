@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart';
 
-import 'package:clean_architecture/data/interfaces/interfaces.dart';
-import 'package:clean_architecture/data/utils/utils.dart';
+import '../../contracts/contracts.dart';
+import '../../data/data.dart';
 
-class HttpAdapter implements IHttpAdapter {
+class HttpHandlerAdapter implements HttpAdapter {
   Client client;
 
-  HttpAdapter(this.client);
+  HttpHandlerAdapter(this.client);
 
   @override
   Future<Map<String, dynamic>?> request({
