@@ -1,10 +1,9 @@
-import 'dart:async';
-
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import 'package:clean_architecture/contracts/contracts.dart';
+import 'package:clean_architecture/presentation/presentation.dart';
 
 class MockValidation extends Mock implements Validation {}
 
@@ -46,30 +45,5 @@ void main() {
 
       sut.validateEmail(email);
     });
-  });
-}
-
-class StreamLoginPresenter {
-  final Validation validation;
-
-  final _validationController = StreamController<LoginState>.broadcast();
-
-  final _state = LoginState();
-
-  Stream<String> get emailErrorStream => _validationController.stream.map((state) => state.emailError);
-
-  StreamLoginPresenter({required this.validation});
-
-  void validateEmail(String email) {
-    _state.emailError = validation.validate(field: 'email', value: email);
-    _validationController.add(_state);
-  }
-}
-
-class LoginState {
-  String emailError;
-
-  LoginState({
-    this.emailError = '',
   });
 }
