@@ -71,5 +71,15 @@ void main() {
 
       verify(mockValidation.validate(field: 'password', value: password)).called(1);
     });
+
+    test('Deve notificar streams passwordErrorStream e isFormValidStream apenas uma vez caso o Validation retorne mensagem de erro', () {
+      mockErrorMessage('erro');
+
+      sut.passwordErrorStream.listen(expectAsync1((errorMessage) => expect(errorMessage, 'erro')));
+      sut.isFormValidStream.listen(expectAsync1((isValid) => expect(isValid, false)));
+
+      sut.validatePassword(password);
+      sut.validatePassword(password);
+    });
   });
 }
