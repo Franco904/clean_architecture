@@ -19,7 +19,7 @@ void main() {
           value: anyNamed('value'),
         ));
 
-    void mockErrorMessage(String errorMessage, {String? field}) => whenValidationCalled().thenReturn(errorMessage);
+    void mockErrorMessage(String errorMessage, {String? field}) => whenValidationCalled(field: field).thenReturn(errorMessage);
 
     setUp(() {
       mockValidation = MockValidation();
@@ -87,6 +87,28 @@ void main() {
       sut.isFormValidStream.listen(expectAsync1((isValid) => expect(isValid, false)));
 
       sut.validatePassword(password);
+      sut.validatePassword(password);
+    });
+
+    test('Deve notificar streams emailErrorStream com mensagem de erro e passwordErrorStream ao combinar emissões', () {
+      mockErrorMessage('erroEmail', field: 'email');
+
+      sut.emailErrorStream.listen(expectAsync1((errorEmail) => expect(errorEmail, 'erroEmail')));
+      sut.passwordErrorStream.listen(expectAsync1((errorPassword) => expect(errorPassword, null)));
+      sut.isFormValidStream.listen(expectAsync1((isValid) => expect(isValid, false)));
+
+      sut.validateEmail(email);
+      sut.validatePassword(password);
+    });
+
+    test('Deve notificar stream isFormValidStream com valor verdadeiro caso o Validation retornar nulo para os campos', () async {
+      sut.emailErrorStream.listen(expectAsync1((errorEmail) => expect(errorEmail, null)));
+      sut.passwordErrorStream.listen(expectAsync1((errorPassword) => expect(errorPassword, null)));
+
+      expectLater(sut.isFormValidStream, emitsInOrder([false, true]));
+
+      sut.validateEmail(email);
+      await Future.delayed(Duration.zero);
       sut.validatePassword(password);
     });
   });
