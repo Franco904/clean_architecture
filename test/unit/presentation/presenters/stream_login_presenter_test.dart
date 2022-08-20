@@ -37,12 +37,21 @@ void main() {
       verify(mockValidation.validate(field: 'email', value: email)).called(1);
     });
 
-    test('Deve notificar a stream emailErrorStream caso o Validation retornar mensagem de erro', () {
+    test('Deve notificar a stream emailErrorStream caso o Validation retorne mensagem de erro', () {
       mockErrorMessage('erro');
 
       // Tem de ser antes do action porque o resultado da emissão demora a ocorrer
       expectLater(sut.emailErrorStream, emits('erro'));
 
+      sut.validateEmail(email);
+    });
+
+    test('Deve notificar apenas uma vez a stream emailErrorStream caso o Validation retorne mensagem de erro', () {
+      mockErrorMessage('erro');
+
+      sut.emailErrorStream.listen(expectAsync1((errorMessage) => expect(errorMessage, 'erro')));
+
+      sut.validateEmail(email);
       sut.validateEmail(email);
     });
   });
