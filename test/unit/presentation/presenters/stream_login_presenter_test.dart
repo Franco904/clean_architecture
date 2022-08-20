@@ -81,5 +81,13 @@ void main() {
       sut.validatePassword(password);
       sut.validatePassword(password);
     });
+
+    test('Deve notificar streams passwordErrorStream e isFormValidStream apenas uma vez caso o Validation retorne nulo', () {
+      sut.passwordErrorStream.listen(expectAsync1((errorMessage) => expect(errorMessage, null)));
+      sut.isFormValidStream.listen(expectAsync1((isValid) => expect(isValid, false)));
+
+      sut.validatePassword(password);
+      sut.validatePassword(password);
+    });
   });
 }
