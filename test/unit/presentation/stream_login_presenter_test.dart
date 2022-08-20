@@ -10,12 +10,15 @@ void main() {
   group('StreamLoginPresenter | ', () {
     late final StreamLoginPresenter sut;
     late final MockValidation mockValidation;
+    late String email;
 
-    test('Deve chamar Validation com email correto', () {
+    setUp(() {
       mockValidation = MockValidation();
       sut = StreamLoginPresenter(validation: mockValidation);
-      final email = faker.internet.email();
+      email = faker.internet.email();
+    });
 
+    test('Deve chamar Validation com email correto', () {
       sut.validateEmail(email);
 
       verify(mockValidation.validate(field: 'email', value: email)).called(1);
