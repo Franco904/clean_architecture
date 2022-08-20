@@ -46,10 +46,19 @@ void main() {
       sut.validateEmail(email);
     });
 
-    test('Deve notificar apenas uma vez a stream emailErrorStream caso o Validation retorne mensagem de erro', () {
+    test('Deve notificar a stream emailErrorStream apenas uma vez caso o Validation retorne mensagem de erro', () {
       mockErrorMessage('erro');
 
       sut.emailErrorStream.listen(expectAsync1((errorMessage) => expect(errorMessage, 'erro')));
+
+      sut.validateEmail(email);
+      sut.validateEmail(email);
+    });
+
+    test('Deve notificar a stream isFormValidStream apenas uma vez caso o Validation retorne mensagem de erro', () {
+      mockErrorMessage('erro');
+
+      sut.isFormValidStream.listen(expectAsync1((isValid) => expect(isValid, false)));
 
       sut.validateEmail(email);
       sut.validateEmail(email);

@@ -10,6 +10,7 @@ class StreamLoginPresenter {
   final _state = LoginState();
 
   Stream<String> get emailErrorStream => _validationController.stream.map((state) => state.emailError).distinct();
+  Stream<bool> get isFormValidStream => _validationController.stream.map((state) => state.isFormValid).distinct();
 
   StreamLoginPresenter({required this.validation});
 
@@ -21,6 +22,7 @@ class StreamLoginPresenter {
 
 class LoginState {
   String emailError;
+  bool get isFormValid => false;
 
   LoginState({
     this.emailError = '',
