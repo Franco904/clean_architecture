@@ -12,6 +12,7 @@ void main() {
     late StreamLoginPresenter sut;
     late MockValidation mockValidation;
     late String email;
+    late String password;
 
     PostExpectation whenValidationCalled({String? field}) => when(mockValidation.validate(
           field: field ?? anyNamed('field'),
@@ -24,6 +25,7 @@ void main() {
       mockValidation = MockValidation();
       sut = StreamLoginPresenter(validation: mockValidation);
       email = faker.internet.email();
+      password = faker.internet.password();
     });
 
     tearDown(() {
@@ -62,6 +64,12 @@ void main() {
 
       sut.validateEmail(email);
       sut.validateEmail(email);
+    });
+
+    test('Deve chamar Validation com senha correta', () {
+      sut.validatePassword(password);
+
+      verify(mockValidation.validate(field: 'password', value: password)).called(1);
     });
   });
 }

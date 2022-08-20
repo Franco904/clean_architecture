@@ -18,6 +18,11 @@ class StreamLoginPresenter {
     _state.emailError = validation.validate(field: 'email', value: email);
     _validationController.add(_state);
   }
+
+  void validatePassword(String password) {
+    _state.emailError = validation.validate(field: 'password', value: password);
+    _validationController.add(_state);
+  }
 }
 
 class LoginState {
