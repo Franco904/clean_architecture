@@ -1,3 +1,4 @@
+import 'package:clean_architecture/domain/domain.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -24,7 +25,11 @@ void main() {
           value: anyNamed('value'),
         ));
 
-    void mockErrorMessage(String errorMessage, {String? field}) => whenValidationCalled(field: field).thenReturn(errorMessage);
+    PostExpectation whenAuthenticationCalled() => when(mockAuthentication.auth(any as AuthenticationParams));
+
+    void mockValidationErrorMessage(String errorMessage, {String? field}) => whenValidationCalled(field: field).thenReturn(errorMessage);
+
+    void mockAuthenticationResult() => whenAuthenticationCalled().thenAnswer((_) async => Account(token: faker.guid.guid()));
 
     setUp(() {
       mockValidation = MockValidation();
@@ -37,6 +42,8 @@ void main() {
 
       email = faker.internet.email();
       password = faker.internet.password();
+
+      mockAuthenticationResult();
     });
 
     tearDown(() {
@@ -53,7 +60,7 @@ void main() {
     });
 
     test('Deve notificar a stream emailErrorStream caso o Validation retorne mensagem de erro', () {
-      mockErrorMessage('erro');
+      mockValidationErrorMessage('erro');
 
       // Tem de ser antes do action porque o resultado da emissão demora a ocorrer
       expectLater(sut.emailErrorStream, emits('erro'));
@@ -62,7 +69,7 @@ void main() {
     });
 
     test('Deve notificar streams emailErrorStream e isFormValidStream apenas uma vez caso o Validation retorne mensagem de erro', () {
-      mockErrorMessage('erro');
+      mockValidationErrorMessage('erro');
 
       sut.emailErrorStream.listen(expectAsync1((errorMessage) => expect(errorMessage, 'erro')));
       sut.isFormValidStream.listen(expectAsync1((isValid) => expect(isValid, false)));
@@ -86,7 +93,7 @@ void main() {
     });
 
     test('Deve notificar streams passwordErrorStream e isFormValidStream apenas uma vez caso o Validation retorne mensagem de erro', () {
-      mockErrorMessage('erro');
+      mockValidationErrorMessage('erro');
 
       sut.passwordErrorStream.listen(expectAsync1((errorMessage) => expect(errorMessage, 'erro')));
       sut.isFormValidStream.listen(expectAsync1((isValid) => expect(isValid, false)));
@@ -104,7 +111,7 @@ void main() {
     });
 
     test('Deve notificar streams emailErrorStream com mensagem de erro e passwordErrorStream ao combinar emissões', () {
-      mockErrorMessage('erroEmail', field: 'email');
+      mockValidationErrorMessage('erroEmail', field: 'email');
 
       sut.emailErrorStream.listen(expectAsync1((errorEmail) => expect(errorEmail, 'erroEmail')));
       sut.passwordErrorStream.listen(expectAsync1((errorPassword) => expect(errorPassword, null)));
@@ -132,6 +139,17 @@ void main() {
       await sut.auth();
 
       verify(mockAuthentication.auth(AuthenticationParams(email: email, password: password))).called(1);
+    });
+
+    test('Deve emitir eventos corretos caso o Authentication seja bem sucedido', () async {
+      // mockAuthenticationResult() no setUp()
+
+      sut.validateEmail(email);
+      sut.validatePassword(password);
+
+      expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+
+      await sut.auth();
     });
   });
 }
