@@ -7,10 +7,15 @@ import 'package:clean_architecture/presentation/presentation.dart';
 
 class MockValidation extends Mock implements Validation {}
 
+class MockAuthentication extends Mock implements Authentication {}
+
 void main() {
   group('StreamLoginPresenter | ', () {
     late StreamLoginPresenter sut;
+
     late MockValidation mockValidation;
+    late MockAuthentication mockAuthentication;
+
     late String email;
     late String password;
 
@@ -23,13 +28,21 @@ void main() {
 
     setUp(() {
       mockValidation = MockValidation();
-      sut = StreamLoginPresenter(validation: mockValidation);
+      mockAuthentication = MockAuthentication();
+
+      sut = StreamLoginPresenter(
+        validation: mockValidation,
+        authentication: mockAuthentication,
+      );
+
       email = faker.internet.email();
       password = faker.internet.password();
     });
 
     tearDown(() {
       reset(mockValidation);
+      reset(mockAuthentication);
+
       resetMockitoState();
     });
 
@@ -110,6 +123,15 @@ void main() {
       sut.validateEmail(email);
       await Future.delayed(Duration.zero);
       sut.validatePassword(password);
+    });
+
+    test('Deve chamar Authentication com os parâmetros corretos', () async {
+      sut.validateEmail(email);
+      sut.validatePassword(password);
+
+      await sut.auth();
+
+      verify(mockAuthentication.auth(AuthenticationParams(email: email, password: password))).called(1);
     });
   });
 }

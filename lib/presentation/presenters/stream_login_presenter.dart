@@ -4,6 +4,7 @@ import '../../contracts/contracts.dart';
 
 class StreamLoginPresenter {
   final Validation validation;
+  final Authentication authentication;
 
   final _validationController = StreamController<LoginState>.broadcast();
 
@@ -13,7 +14,10 @@ class StreamLoginPresenter {
   Stream<String?> get passwordErrorStream => _validationController.stream.map((state) => state.passwordError).distinct();
   Stream<bool> get isFormValidStream => _validationController.stream.map((state) => state.isFormValid).distinct();
 
-  StreamLoginPresenter({required this.validation});
+  StreamLoginPresenter({
+    required this.validation,
+    required this.authentication,
+  });
 
   void _update() => _validationController.add(_state);
 
@@ -27,6 +31,10 @@ class StreamLoginPresenter {
     _state.passwordFieldValue = password;
     _state.passwordError = validation.validate(field: 'password', value: password);
     _update();
+  }
+
+  Future<void> auth() async {
+    await authentication.auth(AuthenticationParams(email: _state.emailFieldValue!, password: _state.passwordFieldValue!));
   }
 }
 
