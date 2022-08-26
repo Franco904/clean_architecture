@@ -1,8 +1,7 @@
 import 'dart:async';
 
-import 'package:clean_architecture/domain/domain.dart';
-
 import '../../contracts/contracts.dart';
+import '../../domain/domain.dart';
 
 class StreamLoginPresenter {
   final Validation validation;

@@ -1,9 +1,9 @@
-import 'package:clean_architecture/domain/domain.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import 'package:clean_architecture/contracts/contracts.dart';
+import 'package:clean_architecture/domain/domain.dart';
 import 'package:clean_architecture/presentation/presentation.dart';
 
 class MockValidation extends Mock implements Validation {}
@@ -162,6 +162,18 @@ void main() {
 
       expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
       sut.mainErrorStream.listen(expectAsync1((error) => expect(error, 'Credenciais inválidas.')));
+
+      await sut.auth();
+    });
+
+    test('Deve emitir eventos corretos caso o Authentication retorne um erro UnexpectedError', () async {
+      mockAuthenticationError(DomainError.unexpected);
+
+      sut.validateEmail(email);
+      sut.validatePassword(password);
+
+      expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+      sut.mainErrorStream.listen(expectAsync1((error) => expect(error, 'Algo de errado aconteceu. Tente novamente em breve.')));
 
       await sut.auth();
     });
