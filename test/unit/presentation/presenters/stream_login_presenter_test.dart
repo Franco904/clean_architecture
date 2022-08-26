@@ -31,6 +31,8 @@ void main() {
 
     void mockAuthenticationResult() => whenAuthenticationCalled().thenAnswer((_) async => Account(token: faker.guid.guid()));
 
+    void mockAuthenticationError(DomainError domainError) => whenAuthenticationCalled().thenThrow(domainError);
+
     setUp(() {
       mockValidation = MockValidation();
       mockAuthentication = MockAuthentication();
@@ -148,6 +150,18 @@ void main() {
       sut.validatePassword(password);
 
       expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+
+      await sut.auth();
+    });
+
+    test('Deve emitir eventos corretos caso o Authentication retorne um erro InvalidCredentialsError', () async {
+      mockAuthenticationError(DomainError.invalidCredentials);
+
+      sut.validateEmail(email);
+      sut.validatePassword(password);
+
+      expectLater(sut.isLoadingStream, emitsInOrder([true, false]));
+      sut.mainErrorStream.listen(expectAsync1((error) => expect(error, 'Credenciais inválidas.')));
 
       await sut.auth();
     });

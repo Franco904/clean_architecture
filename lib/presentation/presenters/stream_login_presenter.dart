@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:clean_architecture/domain/domain.dart';
+
 import '../../contracts/contracts.dart';
 
 class StreamLoginPresenter {
@@ -12,6 +14,7 @@ class StreamLoginPresenter {
 
   Stream<String?> get emailErrorStream => _validationController.stream.map((state) => state.emailError).distinct();
   Stream<String?> get passwordErrorStream => _validationController.stream.map((state) => state.passwordError).distinct();
+  Stream<String?> get mainErrorStream => _validationController.stream.map((state) => state.mainError).distinct();
   Stream<bool> get isFormValidStream => _validationController.stream.map((state) => state.isFormValid).distinct();
   Stream<bool> get isLoadingStream => _validationController.stream.map((state) => state.isLoading).distinct();
 
@@ -38,7 +41,11 @@ class StreamLoginPresenter {
     _state.isLoading = true;
     _update();
 
-    await authentication.auth(AuthenticationParams(email: _state.emailFieldValue!, password: _state.passwordFieldValue!));
+    try {
+      await authentication.auth(AuthenticationParams(email: _state.emailFieldValue!, password: _state.passwordFieldValue!));
+    } on DomainError catch (error) {
+      _state.mainError = error.description;
+    }
 
     _state.isLoading = false;
     _update();
@@ -51,6 +58,8 @@ class LoginState {
 
   String? emailError;
   String? passwordError;
+
+  String? mainError;
 
   bool isLoading = false;
 

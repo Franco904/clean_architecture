@@ -61,7 +61,7 @@ void main() {
 
       final res = sut.auth(params);
 
-      expect(res, throwsA(DomainErrors.unexpected));
+      expect(res, throwsA(DomainError.unexpected));
     });
 
     test('Deve retornar UnexpectedError se o HttpClient responder 404', () async {
@@ -69,7 +69,7 @@ void main() {
 
       final res = sut.auth(params);
 
-      expect(res, throwsA(DomainErrors.unexpected));
+      expect(res, throwsA(DomainError.unexpected));
     });
 
     test('Deve retornar UnexpectedError se o HttpClient responder 500', () async {
@@ -77,7 +77,7 @@ void main() {
 
       final res = sut.auth(params);
 
-      expect(res, throwsA(DomainErrors.unexpected));
+      expect(res, throwsA(DomainError.unexpected));
     });
 
     test('Deve retornar InvalidCredentialsError se o HttpClient responder 401', () async {
@@ -85,7 +85,7 @@ void main() {
 
       final res = sut.auth(params);
 
-      expect(res, throwsA(DomainErrors.invalidCredentials));
+      expect(res, throwsA(DomainError.invalidCredentials));
     });
 
     test('Deve retornar um objeto Account se o HttpClient responder 200', () async {
@@ -102,7 +102,7 @@ void main() {
 
       final account = sut.auth(params);
 
-      expect(account, throwsA(DomainErrors.unexpected));
+      expect(account, throwsA(DomainError.unexpected));
     });
 
     test('Deve retornar nulo se o HttpClient responder 200 sem dados retornados', () async {
