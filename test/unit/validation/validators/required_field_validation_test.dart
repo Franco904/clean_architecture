@@ -26,6 +26,12 @@ void main() {
 
       expect(error, 'Campo Obrigatório');
     });
+
+    test('Deve retornar mensagem de erro se o valor passado for nulo', () {
+      final error = sut.validate(null);
+
+      expect(error, 'Campo Obrigatório');
+    });
   });
 }
 
@@ -36,8 +42,8 @@ class RequiredFieldValidation implements FieldValidation {
   RequiredFieldValidation(this.field);
 
   @override
-  String? validate(String value) {
-    return value.isEmpty ? 'Campo Obrigatório' : null;
+  String? validate(String? value) {
+    return value != null && value.isNotEmpty ? null : 'Campo Obrigatório';
   }
 }
 
