@@ -7,22 +7,22 @@ class StreamLoginPresenter {
   final Validation validation;
   final Authentication authentication;
 
-  final _validationController = StreamController<LoginState>.broadcast();
+  StreamController<LoginState>? _validationController = StreamController<LoginState>.broadcast();
 
   final _state = LoginState();
 
-  Stream<String?> get emailErrorStream => _validationController.stream.map((state) => state.emailError).distinct();
-  Stream<String?> get passwordErrorStream => _validationController.stream.map((state) => state.passwordError).distinct();
-  Stream<String?> get mainErrorStream => _validationController.stream.map((state) => state.mainError).distinct();
-  Stream<bool> get isFormValidStream => _validationController.stream.map((state) => state.isFormValid).distinct();
-  Stream<bool> get isLoadingStream => _validationController.stream.map((state) => state.isLoading).distinct();
+  Stream<String?> get emailErrorStream => _validationController?.stream.map((state) => state.emailError).distinct() as Stream<String?>;
+  Stream<String?> get passwordErrorStream => _validationController?.stream.map((state) => state.passwordError).distinct() as Stream<String?>;
+  Stream<String?> get mainErrorStream => _validationController?.stream.map((state) => state.mainError).distinct() as Stream<String?>;
+  Stream<bool> get isFormValidStream => _validationController?.stream.map((state) => state.isFormValid).distinct() as Stream<bool>;
+  Stream<bool> get isLoadingStream => _validationController?.stream.map((state) => state.isLoading).distinct() as Stream<bool>;
 
   StreamLoginPresenter({
     required this.validation,
     required this.authentication,
   });
 
-  void _update() => _validationController.add(_state);
+  void _update() => _validationController?.add(_state);
 
   void validateEmail(String email) {
     _state.emailFieldValue = email;
@@ -48,6 +48,11 @@ class StreamLoginPresenter {
 
     _state.isLoading = false;
     _update();
+  }
+
+  Future<void> dispose() async {
+    _validationController?.close();
+    _validationController = null;
   }
 }
 

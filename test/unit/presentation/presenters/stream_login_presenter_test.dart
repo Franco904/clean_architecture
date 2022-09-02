@@ -177,5 +177,16 @@ void main() {
 
       await sut.auth();
     });
+
+    test('Deve fechar todas as streams abertas após executar o dispose', () async {
+      // Emite nulo caso não haja erro, então não deve emitir após streams serem fechadas
+      expectLater(sut.emailErrorStream, neverEmits(null));
+      expectLater(sut.passwordErrorStream, neverEmits(null));
+
+      await sut.dispose();
+
+      sut.validateEmail(email);
+      sut.validatePassword(password);
+    });
   });
 }
