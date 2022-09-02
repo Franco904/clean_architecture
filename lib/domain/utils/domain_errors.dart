@@ -1,1 +1,0 @@
-enum DomainErrors { unexpected, invalidCredentials }

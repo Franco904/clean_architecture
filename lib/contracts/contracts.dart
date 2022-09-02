@@ -1,3 +1,3 @@
-export 'data/http/http_adapter.dart';
-export 'domain/usecases/authentication.dart';
-export 'ui/pages/login/login_presenter.dart';
+export 'data/data.dart';
+export 'domain/domain.dart';
+export 'presentation/presentation.dart';
