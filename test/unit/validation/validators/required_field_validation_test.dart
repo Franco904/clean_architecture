@@ -11,39 +11,17 @@ void main() {
   group('RequiredFieldValidation | ', () {
     late RequiredFieldValidation sut;
 
-    // PostExpectation whenValidationCalled({String? field}) => when(mockValidation.validate(
-    //       field: field ?? anyNamed('field'),
-    //       value: anyNamed('value'),
-    //     ));
-
-    // PostExpectation whenAuthenticationCalled() => when(mockAuthentication.auth(any as AuthenticationParams));
-
-    // void mockValidationErrorMessage(String errorMessage, {String? field}) => whenValidationCalled(field: field).thenReturn(errorMessage);
-
-    // void mockAuthenticationResult() => whenAuthenticationCalled().thenAnswer((_) async => Account(token: faker.guid.guid()));
-
-    // void mockAuthenticationError(DomainError domainError) => whenAuthenticationCalled().thenThrow(domainError);
-
-    setUp(() {});
-
-    tearDown(() {
-      // reset(mockValidation);
-      // reset(mockAuthentication);
-
-      resetMockitoState();
+    setUp(() {
+      sut = RequiredFieldValidation('any_field');
     });
 
     test('Deve retornar nulo se o valor passado não estiver vazio', () {
-      sut = RequiredFieldValidation('any_field');
-
       final error = sut.validate('any_value');
 
       expect(error, null);
     });
 
     test('Deve retornar mensagem de erro se o valor passado estiver vazio', () {
-      sut = RequiredFieldValidation('any_field');
-
       final error = sut.validate('');
 
       expect(error, 'Campo Obrigatório');
@@ -52,6 +30,7 @@ void main() {
 }
 
 class RequiredFieldValidation implements FieldValidation {
+  @override
   final String field;
 
   RequiredFieldValidation(this.field);
