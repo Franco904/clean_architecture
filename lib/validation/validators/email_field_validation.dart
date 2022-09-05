@@ -7,7 +7,7 @@ class EmailFieldValidation implements FieldValidation {
   EmailFieldValidation(this.field);
 
   @override
-  String? validate(String value) {
+  String? validate(String? value) {
     return null;
   }
 }
