@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import 'package:clean_architecture/contracts/contracts.dart';
+import 'package:clean_architecture/validation/validation.dart';
 
 class MockFieldValidation extends Mock implements FieldValidation {}
 
@@ -50,26 +51,4 @@ void main() {
       expect(sut.validate(field: 'other_field', value: 'any_value'), 'error_2');
     });
   });
-}
-
-class ValidationComposite {
-  final List<FieldValidation> validations;
-
-  ValidationComposite(this.validations);
-
-  String? validate({required String? field, required String? value}) {
-    String? error;
-
-    final filteredValidationsByField = validations.where((validation) => validation.field == field);
-
-    for (final validation in filteredValidationsByField) {
-      error = validation.validate(value);
-
-      if (error != null && error.isNotEmpty) {
-        return error;
-      }
-    }
-
-    return error;
-  }
 }
