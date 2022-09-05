@@ -28,5 +28,11 @@ void main() {
       expect(sut.validate('teste_123@tavares.eti.br'), null);
       expect(sut.validate('123456ASRS@fo.org'), null);
     });
+
+    test('Deve retornar erro se o email for inválido', () {
+      expect(sut.validate('franco tavares@gmail.com'), 'Email inválido');
+      expect(sut.validate('teste_123'), 'Email inválido');
+      expect(sut.validate('123456aSRS@fo34'), 'Email inválido');
+    });
   });
 }
