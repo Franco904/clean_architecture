@@ -14,8 +14,8 @@ void main() {
     late ValidationComposite sut;
 
     void mockValidation1(String? value) => when(mockFieldValidation1.validate('any_value')).thenReturn(value);
-    void mockValidation2(String? value) => when(mockFieldValidation2.validate('other_value')).thenReturn(value);
-    void mockValidation3(String? value) => when(mockFieldValidation2.validate('another_value')).thenReturn(value);
+    void mockValidation2(String? value) => when(mockFieldValidation2.validate('any_value')).thenReturn(value);
+    void mockValidation3(String? value) => when(mockFieldValidation3.validate('any_value')).thenReturn(value);
 
     setUp(() {
       mockFieldValidation1 = MockFieldValidation();
@@ -25,8 +25,8 @@ void main() {
       sut = ValidationComposite([mockFieldValidation1, mockFieldValidation2, mockFieldValidation3]);
 
       when(mockFieldValidation1.field).thenReturn('any_field');
-      when(mockFieldValidation2.field).thenReturn('other_value');
-      when(mockFieldValidation3.field).thenReturn('another_value');
+      when(mockFieldValidation2.field).thenReturn('other_field');
+      when(mockFieldValidation3.field).thenReturn('any_field');
     });
 
     tearDown(() {
@@ -40,6 +40,14 @@ void main() {
 
       expect(sut.validate(field: 'any_field', value: 'any_value'), null);
     });
+
+    test('Deve retornar primeiro erro encontrado dos validadores', () {
+      mockValidation1('error_1');
+      mockValidation2('error_2');
+      mockValidation3('error_3');
+
+      expect(sut.validate(field: 'any_field', value: 'any_value'), 'error_1');
+    });
   });
 }
 
@@ -49,6 +57,16 @@ class ValidationComposite {
   ValidationComposite(this.validations);
 
   String? validate({required String? field, required String? value}) {
-    return null;
+    String? error;
+
+    for (final validation in validations) {
+      error = validation.validate(value);
+
+      if (error != null && error.isNotEmpty) {
+        return error;
+      }
+    }
+
+    return error;
   }
 }
