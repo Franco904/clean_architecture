@@ -11,10 +11,6 @@ void main() {
       sut = EmailFieldValidation('any_field');
     });
 
-    tearDown(() {
-      resetMockitoState();
-    });
-
     test('Deve retornar nulo se o email for vazio', () {
       expect(sut.validate(''), null);
     });
