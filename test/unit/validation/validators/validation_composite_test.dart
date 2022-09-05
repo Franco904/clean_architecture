@@ -47,6 +47,7 @@ void main() {
       mockValidation3('error_3');
 
       expect(sut.validate(field: 'any_field', value: 'any_value'), 'error_1');
+      expect(sut.validate(field: 'other_field', value: 'any_value'), 'error_2');
     });
   });
 }
@@ -59,7 +60,9 @@ class ValidationComposite {
   String? validate({required String? field, required String? value}) {
     String? error;
 
-    for (final validation in validations) {
+    final filteredValidationsByField = validations.where((validation) => validation.field == field);
+
+    for (final validation in filteredValidationsByField) {
       error = validation.validate(value);
 
       if (error != null && error.isNotEmpty) {
