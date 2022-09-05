@@ -34,6 +34,15 @@ void main() {
       resetMockitoState();
     });
 
+    test('Deve chamar a validação para os 3 valores informados na composição', () {
+      sut.validate(field: 'any_field', value: 'any_value');
+      sut.validate(field: 'other_field', value: 'any_value');
+
+      verify(mockFieldValidation1.validate('any_value')).called(1);
+      verify(mockFieldValidation2.validate('any_value')).called(1);
+      verify(mockFieldValidation3.validate('any_value')).called(1);
+    });
+
     test('Deve retornar nulo caso todos os validadores retornem nulo ou vazio', () {
       mockValidation1(null);
       mockValidation2('');
