@@ -16,15 +16,17 @@ void main() {
     });
 
     test('Deve retornar nulo se o email for vazio', () {
-      final error = sut.validate('');
-
-      expect(error, null);
+      expect(sut.validate(''), null);
     });
 
     test('Deve retornar nulo se o email for nulo', () {
-      final error = sut.validate(null);
+      expect(sut.validate(null), null);
+    });
 
-      expect(error, null);
+    test('Deve retornar nulo se o email for válido', () {
+      expect(sut.validate('franco.tavares@gmail.com'), null);
+      expect(sut.validate('teste_123@tavares.eti.br'), null);
+      expect(sut.validate('123456ASRS@fo.org'), null);
     });
   });
 }
