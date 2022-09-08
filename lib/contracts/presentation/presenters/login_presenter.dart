@@ -1,7 +1,7 @@
 abstract class LoginPresenter {
-  Stream<String> get emailErrorStream;
+  Stream<String?> get emailErrorStream;
 
-  Stream<String> get passwordErrorStream;
+  Stream<String?> get passwordErrorStream;
 
   Stream<String?> get mainErrorStream;
 

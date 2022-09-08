@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
 import '../../ui/ui.dart';
+import '../factories/factories.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,10 +19,14 @@ class CleanArchitectureApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Clean Architecture',
       theme: makeAppTheme(),
+      initialRoute: '/login',
+      getPages: [
+        GetPage(name: '/login', page: makeLoginPage),
+      ],
     );
   }
 }
